@@ -8,7 +8,10 @@ non-destructive analysis/benchmark tool, and every invocation runs
 inside the disposable kernel-sprint-env container (see docker_agent.py)
 with a hard timeout.
 """
+import asyncio
+import queue
 import shlex
+import threading
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
@@ -49,7 +52,23 @@ async def lab_socket(websocket: WebSocket):
                 )
                 continue
 
-            for line in docker_agent.stream_command(command_line):
+            # stream_command() blocks on subprocess I/O for up to
+            # COMMAND_TIMEOUT_SEC -- run it in a worker thread so the
+            # event loop stays free to serve other connections.
+            lines: queue.Queue = queue.Queue()
+
+            def worker(command_line=command_line):
+                for line in docker_agent.stream_command(command_line):
+                    lines.put(line)
+                lines.put(None)
+
+            threading.Thread(target=worker, daemon=True).start()
+
+            loop = asyncio.get_event_loop()
+            while True:
+                line = await loop.run_in_executor(None, lines.get)
+                if line is None:
+                    break
                 await websocket.send_text(line)
     except WebSocketDisconnect:
         pass
