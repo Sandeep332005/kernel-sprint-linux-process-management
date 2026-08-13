@@ -260,17 +260,19 @@ CLAUDE.md
 
 FINAL CHECKLIST:
 
-[ ] Linux subsystem analyzed
+[x] Linux subsystem analyzed (documentation/subsystem-selection.md)
 
-[ ] Performance bottleneck measured
+[x] Performance bottleneck measured (documentation/bottleneck-analysis.md)
 
-[ ] Kernel optimization implemented
+[x] Kernel optimization implemented (patches/scheduler-optimization.patch)
 
-[ ] Benchmark comparison completed
+[x] Benchmark comparison completed (results/optimized/results.md)
 
-[ ] Correctness verified
+[x] Correctness verified (results/*-correctness/correctness.log)
 
-[ ] POSIX compliance verified
+[x] POSIX compliance verified (results/*-correctness/correctness.log)
+
+See documentation/performance-report.md for the full synthesis.
 
 
 CLAUDE WORKING STYLE:
