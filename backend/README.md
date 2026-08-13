@@ -26,7 +26,7 @@ python main.py
 ```
 
 Binds to `127.0.0.1:8877` only — not reachable from the network. The
-Next.js frontend (`../web`, `npm run dev`, port 3000) talks to it via
+Next.js frontend (`../web`, `npm run dev`, port 4477) talks to it via
 CORS-restricted HTTP (`GET /api/environment`) and WebSocket
 (`/ws/lab`).
 

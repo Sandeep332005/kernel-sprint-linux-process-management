@@ -15,7 +15,7 @@ app = FastAPI(title="Kernel Sprint Orchestrator")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:4477"],
     allow_methods=["GET"],
     allow_headers=["*"],
 )
@@ -27,7 +27,7 @@ app.include_router(lab_router)
 def root():
     return {
         "service": "kernel-sprint-orchestrator",
-        "frontend": "http://localhost:3000 (the actual website)",
+        "frontend": "http://localhost:4477 (the actual website)",
         "endpoints": ["/api/environment", "/ws/lab"],
     }
 
