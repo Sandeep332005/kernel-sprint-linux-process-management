@@ -36,7 +36,7 @@ Inside it, `docker/Dockerfile` builds an Ubuntu 24.04 image
 ```
 scripts/env.sh up      # start the kernel-sprint Colima VM
 scripts/env.sh build   # build the kernel-sprint-env image
-scripts/env.sh shell   # interactive shell, repo mounted at /workspace
+scripts/env.sh shell   # interactive shell, repo at /workspace, kernel source at /kernel
 scripts/env.sh down    # stop the VM
 ```
 
@@ -74,3 +74,20 @@ useful for benchmarking userspace programs (Phase 3 benchmarks) but not
 for tracing a custom-built kernel. Boot-testing a custom kernel (Phase 6)
 requires running it under `qemu-system-x86_64` as a guest, which is
 installed and ready but not yet scripted.
+
+## Incident: case-insensitive host filesystem corrupts kernel source
+
+The kernel source is **not** stored under `kernel/` on the host — it
+lives in the Docker volume `kernel-sprint-src`, backed by the
+`kernel-sprint` VM's native ext4 disk. The first attempt cloned into
+`$REPO_ROOT/kernel`, a path shared into the container from the host via
+virtiofs; macOS's APFS volume is case-insensitive even through that
+mount, and the Linux tree has same-directory files differing only by
+case (`xt_DSCP.c`/`xt_dscp.c`, `xt_HL.c`/`xt_hl.c`, and others) that
+collided and silently clobbered each other, leaving `git status` dirty
+and the tree missing files it needs to build. Re-cloning into a Docker
+named volume (case-sensitive, VM-native) fixed it — confirmed both
+case variants of every colliding file exist and `git status` is clean.
+`kernel/.gitkeep` on the host is just a structure placeholder; the real
+source is only reachable via `scripts/env.sh shell` (mounted at
+`/kernel`) or any `docker run -v kernel-sprint-src:/kernel ...`.

@@ -4,15 +4,24 @@
 # kernel build/trace/benchmark toolchain (gcc, make, perf, ftrace,
 # trace-cmd, qemu, stress-ng).
 #
+# The kernel source lives in the Docker volume `kernel-sprint-src`, which
+# is backed by the VM's native ext4 disk — NOT under $REPO_ROOT/kernel on
+# the host. macOS's APFS is case-insensitive (even via virtiofs mounts),
+# and the Linux tree has files that differ only by case in the same
+# directory (xt_DSCP.c / xt_dscp.c, xt_HL.c / xt_hl.c, ...) that collide
+# and silently corrupt the tree if cloned onto a host-mounted path.
+#
 # Usage:
 #   scripts/env.sh up       start the kernel-sprint Colima VM
 #   scripts/env.sh build    build the kernel-sprint-env Docker image
-#   scripts/env.sh shell    drop into an interactive shell in the container
+#   scripts/env.sh shell    shell in the container, repo mounted at /workspace,
+#                           kernel source volume mounted at /kernel
 #   scripts/env.sh down     stop the kernel-sprint Colima VM
 set -euo pipefail
 
 PROFILE="kernel-sprint"
 IMAGE="kernel-sprint-env"
+SRC_VOLUME="kernel-sprint-src"
 DOCKER_SOCK="unix://${HOME}/.colima/${PROFILE}/docker.sock"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
@@ -24,7 +33,10 @@ case "${1:-}" in
     DOCKER_HOST="$DOCKER_SOCK" docker build -t "$IMAGE" -f "$REPO_ROOT/docker/Dockerfile" "$REPO_ROOT/docker"
     ;;
   shell)
-    DOCKER_HOST="$DOCKER_SOCK" docker run --rm -it -v "$REPO_ROOT:/workspace" -w /workspace "$IMAGE" bash
+    DOCKER_HOST="$DOCKER_SOCK" docker run --rm -it \
+      -v "$REPO_ROOT:/workspace" -w /workspace \
+      -v "$SRC_VOLUME:/kernel" \
+      "$IMAGE" bash
     ;;
   down)
     colima stop --profile "$PROFILE"
