@@ -5,8 +5,9 @@ RUN apt-get update && apt-get install -y \
     linux-tools-common linux-tools-generic \
     "linux-tools-$(uname -r)" \
     trace-cmd \
-    qemu-system-x86 qemu-utils \
+    qemu-system-x86 qemu-system-arm qemu-utils \
     stress-ng \
+    busybox-static cpio gzip \
     flex bison libssl-dev libelf-dev bc \
     libncurses-dev dwarves \
     && rm -rf /var/lib/apt/lists/*

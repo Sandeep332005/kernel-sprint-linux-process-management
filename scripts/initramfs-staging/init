@@ -1,0 +1,22 @@
+#!/bin/busybox sh
+/bin/busybox mount -t proc proc /proc
+/bin/busybox mount -t sysfs sysfs /sys
+
+echo "=== kernel-sprint guest boot ==="
+/bin/busybox uname -a
+
+echo "=== BENCHMARK-START process_creation ==="
+/bin/process_creation 5000
+echo "=== BENCHMARK-END process_creation ==="
+
+echo "=== BENCHMARK-START context_switch ==="
+/bin/context_switch 20000
+echo "=== BENCHMARK-END context_switch ==="
+
+echo "=== BENCHMARK-START scheduler_latency ==="
+/bin/scheduler_latency 1000 2000
+echo "=== BENCHMARK-END scheduler_latency ==="
+
+echo "=== kernel-sprint guest done ==="
+/bin/busybox sync
+/bin/busybox poweroff -f
