@@ -1,0 +1,295 @@
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x000f0510]
+[    0.000000] Linux version 6.6.151 (root@26eca53efd7c) (gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #1 SMP PREEMPT Thu Aug 13 09:22:47 UTC 2026
+[    0.000000] KASLR enabled
+[    0.000000] random: crng init done
+[    0.000000] Machine model: linux,dummy-virt
+[    0.000000] efi: UEFI not found.
+[    0.000000] NUMA: No NUMA configuration found
+[    0.000000] NUMA: Faking a node at [mem 0x0000000040000000-0x000000007fffffff]
+[    0.000000] NUMA: NODE_DATA [mem 0x7fdf19c0-0x7fdf3fff]
+[    0.000000] Zone ranges:
+[    0.000000]   DMA      [mem 0x0000000040000000-0x000000007fffffff]
+[    0.000000]   DMA32    empty
+[    0.000000]   Normal   empty
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000040000000-0x000000007fffffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000040000000-0x000000007fffffff]
+[    0.000000] cma: Reserved 32 MiB at 0x000000007cc00000 on node -1
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.1 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: Trusted OS migration not required
+[    0.000000] psci: SMC Calling Convention v1.0
+[    0.000000] percpu: Embedded 22 pages/cpu s50856 r8192 d31064 u90112
+[    0.000000] Detected PIPT I-cache on CPU0
+[    0.000000] CPU features: detected: Address authentication (architected QARMA5 algorithm)
+[    0.000000] CPU features: detected: HCRX_EL2 register
+[    0.000000] CPU features: detected: Hardware dirty bit management
+[    0.000000] CPU features: detected: Spectre-v4
+[    0.000000] CPU features: detected: Spectre-BHB
+[    0.000000] alternatives: applying boot alternatives
+[    0.000000] Kernel command line: console=ttyAMA0 rdinit=/init panic=1
+[    0.000000] Dentry cache hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 65536 (order: 7, 524288 bytes, linear)
+[    0.000000] Fallback order for Node 0: 0 
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 258048
+[    0.000000] Policy zone: DMA
+[    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+[    0.000000] software IO TLB: area num 4.
+[    0.000000] software IO TLB: mapped [mem 0x0000000078c00000-0x000000007cc00000] (64MB)
+[    0.000000] Memory: 884852K/1048576K available (16768K kernel code, 4294K rwdata, 10632K rodata, 9152K init, 606K bss, 130956K reserved, 32768K cma-reserved)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+[    0.000000] rcu: Preemptible hierarchical RCU implementation.
+[    0.000000] rcu: 	RCU event tracing is enabled.
+[    0.000000] rcu: 	RCU restricting CPUs from NR_CPUS=256 to nr_cpu_ids=4.
+[    0.000000] 	Trampoline variant of Tasks RCU enabled.
+[    0.000000] 	Tracing variant of Tasks RCU enabled.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=4
+[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[    0.000000] Root IRQ handler: gic_handle_irq
+[    0.000000] GICv2m: range[mem 0x08020000-0x08020fff], SPI[80:143]
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.000000] arch_timer: cp15 timer(s) running at 62.50MHz (virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0x1ffffffffffffff max_cycles: 0x1cd42e208c, max_idle_ns: 881590405314 ns
+[    0.000043] sched_clock: 57 bits at 63MHz, resolution 16ns, wraps every 4398046511096ns
+[    0.010351] Console: colour dummy device 80x25
+[    0.014379] Calibrating delay loop (skipped), value calculated using timer frequency.. 125.00 BogoMIPS (lpj=250000)
+[    0.015001] pid_max: default: 32768 minimum: 301
+[    0.016318] LSM: initializing lsm=capability,integrity
+[    0.018759] Mount-cache hash table entries: 2048 (order: 2, 16384 bytes, linear)
+[    0.018872] Mountpoint-cache hash table entries: 2048 (order: 2, 16384 bytes, linear)
+[    0.043636] cacheinfo: Unable to detect cache hierarchy for CPU 0
+[    0.051829] RCU Tasks: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
+[    0.052630] RCU Tasks Trace: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
+[    0.054185] rcu: Hierarchical SRCU implementation.
+[    0.054228] rcu: 	Max phase no-delay instances is 1000.
+[    0.064818] EFI services will not be available.
+[    0.066419] smp: Bringing up secondary CPUs ...
+[    0.071694] Detected PIPT I-cache on CPU1
+[    0.075670] CPU1: Booted secondary processor 0x0000000001 [0x000f0510]
+[    0.081395] Detected PIPT I-cache on CPU2
+[    0.081816] CPU2: Booted secondary processor 0x0000000002 [0x000f0510]
+[    0.084757] Detected PIPT I-cache on CPU3
+[    0.085261] CPU3: Booted secondary processor 0x0000000003 [0x000f0510]
+[    0.086404] smp: Brought up 1 node, 4 CPUs
+[    0.086463] SMP: Total of 4 processors activated.
+[    0.086568] CPU features: detected: Branch Target Identification
+[    0.086624] CPU features: detected: 32-bit EL0 Support
+[    0.086655] CPU features: detected: 32-bit EL1 Support
+[    0.086685] CPU features: detected: ARMv8.4 Translation Table Level
+[    0.086724] CPU features: detected: Data cache clean to the PoU not required for I/D coherence
+[    0.086773] CPU features: detected: Common not Private translations
+[    0.086804] CPU features: detected: CRC32 instructions
+[    0.086834] CPU features: detected: Data independent timing control (DIT)
+[    0.086880] CPU features: detected: E0PD
+[    0.086916] CPU features: detected: Enhanced Privileged Access Never
+[    0.086946] CPU features: detected: Enhanced Virtualization Traps
+[    0.086976] CPU features: detected: Fine Grained Traps
+[    0.087047] CPU features: detected: Generic authentication (architected QARMA5 algorithm)
+[    0.087081] CPU features: detected: RCpc load-acquire (LDAPR)
+[    0.087111] CPU features: detected: LSE atomic instructions
+[    0.087141] CPU features: detected: Memory Copy and Memory Set instructions
+[    0.087208] CPU features: detected: Privileged Access Never
+[    0.087239] CPU features: detected: RAS Extension Support
+[    0.087269] CPU features: detected: Random Number Generator
+[    0.087311] CPU features: detected: Speculation barrier (SB)
+[    0.087341] CPU features: detected: Stage-2 Force Write-Back
+[    0.087374] CPU features: detected: Trap EL0 IMPLEMENTATION DEFINED functionality
+[    0.087404] CPU features: detected: TLB range maintenance instructions
+[    0.087455] CPU features: detected: Speculative Store Bypassing Safe (SSBS)
+[    0.087486] CPU features: detected: Scalable Vector Extension
+[    0.096146] SVE: maximum available vector length 256 bytes per vector
+[    0.097387] SVE: default vector length 64 bytes per vector
+[    0.098518] CPU: All CPU(s) started at EL1
+[    0.098725] alternatives: applying system-wide alternatives
+[    0.142697] devtmpfs: initialized
+[    0.179235] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.179712] futex hash table entries: 1024 (order: 4, 65536 bytes, linear)
+[    0.183795] pinctrl core: initialized pinctrl subsystem
+[    0.202766] DMI not present or invalid.
+[    0.211103] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.223445] DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
+[    0.224080] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[    0.224556] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[    0.224923] audit: initializing netlink subsys (disabled)
+[    0.226837] audit: type=2000 audit(0.180:1): state=initialized audit_enabled=0 res=1
+[    0.237110] thermal_sys: Registered thermal governor 'step_wise'
+[    0.237187] thermal_sys: Registered thermal governor 'power_allocator'
+[    0.237774] cpuidle: using governor menu
+[    0.239503] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+[    0.240812] ASID allocator initialised with 65536 entries
+[    0.258922] Serial: AMBA PL011 UART driver
+[    0.400081] 9000000.pl011: ttyAMA0 at MMIO 0x9000000 (irq = 13, base_baud = 0) is a PL011 rev1
+[    0.400967] printk: console [ttyAMA0] enabled
+[    0.445824] Modules: 2G module region forced by RANDOMIZE_MODULE_REGION_FULL
+[    0.446151] Modules: 0 pages in range for non-PLT usage
+[    0.446208] Modules: 513872 pages in range for PLT usage
+[    0.452784] HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.453309] HugeTLB: 0 KiB vmemmap can be freed for a 1.00 GiB page
+[    0.454215] HugeTLB: registered 32.0 MiB page size, pre-allocated 0 pages
+[    0.454451] HugeTLB: 0 KiB vmemmap can be freed for a 32.0 MiB page
+[    0.454687] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.454917] HugeTLB: 0 KiB vmemmap can be freed for a 2.00 MiB page
+[    0.455129] HugeTLB: registered 64.0 KiB page size, pre-allocated 0 pages
+[    0.455342] HugeTLB: 0 KiB vmemmap can be freed for a 64.0 KiB page
+[    0.471522] ACPI: Interpreter disabled.
+[    0.495302] iommu: Default domain type: Translated
+[    0.495511] iommu: DMA domain TLB invalidation policy: strict mode
+[    0.499377] SCSI subsystem initialized
+[    0.503516] usbcore: registered new interface driver usbfs
+[    0.504149] usbcore: registered new interface driver hub
+[    0.504618] usbcore: registered new device driver usb
+[    0.513734] pps_core: LinuxPPS API ver. 1 registered
+[    0.513931] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.514300] PTP clock support registered
+[    0.515556] EDAC MC: Ver: 3.0.0
+[    0.521181] scmi_core: SCMI protocol bus registered
+[    0.527469] FPGA manager framework
+[    0.528632] Advanced Linux Sound Architecture Driver Initialized.
+[    0.541970] vgaarb: loaded
+[    0.545654] clocksource: Switched to clocksource arch_sys_counter
+[    0.548381] VFS: Disk quotas dquot_6.6.0
+[    0.549007] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    0.552772] pnp: PnP ACPI: disabled
+[    0.622680] NET: Registered PF_INET protocol family
+[    0.623957] IP idents hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    0.628589] tcp_listen_portaddr_hash hash table entries: 512 (order: 1, 8192 bytes, linear)
+[    0.628989] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.629260] TCP established hash table entries: 8192 (order: 4, 65536 bytes, linear)
+[    0.629819] TCP bind hash table entries: 8192 (order: 6, 262144 bytes, linear)
+[    0.630957] TCP: Hash tables configured (established 8192 bind 8192)
+[    0.632099] UDP hash table entries: 512 (order: 2, 16384 bytes, linear)
+[    0.632537] UDP-Lite hash table entries: 512 (order: 2, 16384 bytes, linear)
+[    0.634381] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    0.638171] RPC: Registered named UNIX socket transport module.
+[    0.638411] RPC: Registered udp transport module.
+[    0.638611] RPC: Registered tcp transport module.
+[    0.638778] RPC: Registered tcp-with-tls transport module.
+[    0.638973] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    0.639277] PCI: CLS 0 bytes, default 64
+[    0.643912] Unpacking initramfs...
+[    0.646125] kvm [1]: HYP mode not available
+[    0.655320] Initialise system trusted keyrings
+[    0.657170] workingset: timestamp_bits=42 max_order=18 bucket_order=0
+[    0.660198] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.667392] NFS: Registering the id_resolver key type
+[    0.667804] Key type id_resolver registered
+[    0.667976] Key type id_legacy registered
+[    0.668336] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
+[    0.668568] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Driver Registering...
+[    0.670087] 9p: Installing v9fs 9p2000 file system support
+[    0.748303] Freeing initrd memory: 1584K
+[    0.934880] Key type asymmetric registered
+[    0.935136] Asymmetric key parser 'x509' registered
+[    0.935799] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 245)
+[    0.936142] io scheduler mq-deadline registered
+[    0.936402] io scheduler kyber registered
+[    0.936904] io scheduler bfq registered
+[    1.029609] pl061_gpio 9030000.pl061: PL061 GPIO chip registered
+[    1.049135] pci-host-generic 4010000000.pcie: host bridge /pcie@10000000 ranges:
+[    1.050131] pci-host-generic 4010000000.pcie:       IO 0x003eff0000..0x003effffff -> 0x0000000000
+[    1.050884] pci-host-generic 4010000000.pcie:      MEM 0x0010000000..0x003efeffff -> 0x0010000000
+[    1.051263] pci-host-generic 4010000000.pcie:      MEM 0x8000000000..0xffffffffff -> 0x8000000000
+[    1.051946] pci-host-generic 4010000000.pcie: Memory resource size exceeds max for 32 bits
+[    1.052620] pci-host-generic 4010000000.pcie: ECAM at [mem 0x4010000000-0x401fffffff] for [bus 00-ff]
+[    1.055064] pci-host-generic 4010000000.pcie: PCI host bridge to bus 0000:00
+[    1.055475] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    1.055756] pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
+[    1.056013] pci_bus 0000:00: root bus resource [mem 0x10000000-0x3efeffff]
+[    1.056333] pci_bus 0000:00: root bus resource [mem 0x8000000000-0xffffffffff]
+[    1.057894] pci 0000:00:00.0: [1b36:0008] type 00 class 0x060000
+[    1.062066] pci 0000:00:01.0: [1af4:1000] type 00 class 0x020000
+[    1.062516] pci 0000:00:01.0: BAR 0 [io  0x0000-0x001f]
+[    1.062800] pci 0000:00:01.0: BAR 1 [mem 0x00000000-0x00000fff]
+[    1.063168] pci 0000:00:01.0: BAR 4 [mem 0x00000000-0x00003fff 64bit pref]
+[    1.063506] pci 0000:00:01.0: ROM [mem 0x00000000-0x0007ffff pref]
+[    1.070124] pci 0000:00:01.0: ROM [mem 0x10000000-0x1007ffff pref]: assigned
+[    1.070737] pci 0000:00:01.0: BAR 4 [mem 0x8000000000-0x8000003fff 64bit pref]: assigned
+[    1.071172] pci 0000:00:01.0: BAR 1 [mem 0x10080000-0x10080fff]: assigned
+[    1.071467] pci 0000:00:01.0: BAR 0 [io  0x1000-0x101f]: assigned
+[    1.089743] EINJ: ACPI disabled.
+[    1.279869] virtio-pci 0000:00:01.0: enabling device (0000 -> 0003)
+[    1.339115] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[    1.368218] SuperH (H)SCI(F) driver initialized
+[    1.373381] msm_serial: driver initialized
+[    1.378701] STM32 USART driver initialized
+[    1.453612] loop: module loaded
+[    1.463120] megasas: 07.725.01.00-rc1
+[    1.477606] physmap-flash 0.flash: physmap platform flash device: [mem 0x00000000-0x03ffffff]
+[    1.479216] 0.flash: Found 2 x16 devices at 0x0 in 32-bit bank. Manufacturer ID 0x000000 Chip ID 0x000000
+[    1.479907] Intel/Sharp Extended Query Table at 0x0031
+[    1.480772] Using buffer write method
+[    1.481428] physmap-flash 0.flash: physmap platform flash device: [mem 0x04000000-0x07ffffff]
+[    1.482390] 0.flash: Found 2 x16 devices at 0x0 in 32-bit bank. Manufacturer ID 0x000000 Chip ID 0x000000
+[    1.482760] Intel/Sharp Extended Query Table at 0x0031
+[    1.483495] Using buffer write method
+[    1.483790] Concatenating MTD devices:
+[    1.484014] (0): "0.flash"
+[    1.484193] (1): "0.flash"
+[    1.484324] into device "0.flash"
+[    1.559137] tun: Universal TUN/TAP device driver, 1.6
+[    1.581203] thunder_xcv, ver 1.0
+[    1.581923] thunder_bgx, ver 1.0
+[    1.582495] nicpf, ver 1.0
+[    1.594193] hns3: Hisilicon Ethernet Network Driver for Hip08 Family - version
+[    1.594449] hns3: Copyright (c) 2017 Huawei Corporation.
+[    1.595245] hclge is initializing
+[    1.595560] e1000: Intel(R) PRO/1000 Network Driver
+[    1.595710] e1000: Copyright (c) 1999-2006 Intel Corporation.
+[    1.596386] e1000e: Intel(R) PRO/1000 Network Driver
+[    1.596564] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
+[    1.597268] igb: Intel(R) Gigabit Ethernet Network Driver
+[    1.597591] igb: Copyright (c) 2007-2014 Intel Corporation.
+[    1.598269] igbvf: Intel(R) Gigabit Virtual Function Network Driver
+[    1.598503] igbvf: Copyright (c) 2009 - 2012 Intel Corporation.
+[    1.601595] sky2: driver version 1.30
+[    1.613742] VFIO - User Level meta-driver version: 0.3
+[    1.639296] usbcore: registered new interface driver usb-storage
+[    1.665335] rtc-pl031 9010000.pl031: registered as rtc0
+[    1.666429] rtc-pl031 9010000.pl031: setting system clock to 2026-08-13T09:38:40 UTC (1786613920)
+[    1.672488] i2c_dev: i2c /dev entries driver
+[    1.733671] sdhci: Secure Digital Host Controller Interface driver
+[    1.734387] sdhci: Copyright(c) Pierre Ossman
+[    1.741096] Synopsys Designware Multimedia Card Interface Driver
+[    1.749495] sdhci-pltfm: SDHCI platform and OF driver helper
+[    1.766974] ledtrig-cpu: registered to indicate activity on CPUs
+[    1.789381] usbcore: registered new interface driver usbhid
+[    1.789603] usbhid: USB HID core driver
+[    1.821221] hw perfevents: enabled with armv8_pmuv3 PMU driver, 7 counters available
+[    1.856996] NET: Registered PF_PACKET protocol family
+[    1.858348] 9pnet: Installing 9P2000 support
+[    1.858950] Key type dns_resolver registered
+[    1.974388] registered taskstats version 1
+[    1.976093] Loading compiled-in X.509 certificates
+[    2.091109] input: gpio-keys as /devices/platform/gpio-keys/input/input0
+[    2.100905] clk: Disabling unused clocks
+[    2.101460] ALSA device list:
+[    2.101928]   No soundcards found.
+[    2.104093] uart-pl011 9000000.pl011: no DMA platform data
+[    2.194478] Freeing unused kernel memory: 9152K
+[    2.195462] Run /init as init process
+=== kernel-sprint guest boot (correctness) ===
+Linux (none) 6.6.151 #1 SMP PREEMPT Thu Aug 13 09:22:47 UTC 2026 aarch64 GNU/Linux
+=== POSIX-START posix_validation ===
+PASS: fork: parent received positive child PID
+PASS: wait: wait() returned the correct child PID
+PASS: wait: exit status correctly propagated (77)
+PASS: exec: execve() replaced the process image and ran to completion
+PASS: signals: SIGTERM terminated the child with the correct signal
+PASS: signals: SIGKILL terminated the child unconditionally
+posix_validation: 0 failures
+posix_validation: RESULT=PASS
+posix_validation exit code: 0
+=== POSIX-END posix_validation ===
+=== STRESS-START stress_test ===
+stress_test: starting 4 cpu hog threads for 3s while running fork+pthread stress concurrently
+stress_test: completed 3 rounds (fork x100, pthread x100 each), 0 failures
+stress_test: RESULT=PASS
+stress_test exit code: 0
+=== STRESS-END stress_test ===
+=== kernel-sprint guest done ===
+[    5.770851] Flash device refused suspend due to active operation (state 20)
+[    5.771159] Flash device refused suspend due to active operation (state 20)
+[    5.772482] reboot: Power down
