@@ -1,0 +1,21 @@
+#!/bin/busybox sh
+/bin/busybox mkdir -p /proc /sys
+/bin/busybox mount -t proc proc /proc
+/bin/busybox mount -t sysfs sysfs /sys
+
+echo "=== kernel-sprint guest boot (correctness) ==="
+/bin/busybox uname -a
+
+echo "=== POSIX-START posix_validation ==="
+/bin/posix_validation
+echo "posix_validation exit code: $?"
+echo "=== POSIX-END posix_validation ==="
+
+echo "=== STRESS-START stress_test ==="
+/bin/stress_test
+echo "stress_test exit code: $?"
+echo "=== STRESS-END stress_test ==="
+
+echo "=== kernel-sprint guest done ==="
+/bin/busybox sync
+/bin/busybox poweroff -f
