@@ -1,0 +1,13 @@
+# Linux kernel source is huge; clone locally, don't commit
+kernel/*
+!kernel/.gitkeep
+
+# Node / web platform
+web/node_modules/
+web/.next/
+web/out/
+
+# Build artifacts
+*.o
+*.ko
+*.img
