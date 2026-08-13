@@ -23,6 +23,15 @@ app.add_middleware(
 app.include_router(lab_router)
 
 
+@app.get("/")
+def root():
+    return {
+        "service": "kernel-sprint-orchestrator",
+        "frontend": "http://localhost:3000 (the actual website)",
+        "endpoints": ["/api/environment", "/ws/lab"],
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
 
