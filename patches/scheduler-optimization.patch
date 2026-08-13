@@ -1,0 +1,47 @@
+From 5096b57cd1677362b83646d3546d5989fc4cc385 Mon Sep 17 00:00:00 2001
+From: Kernel Sprint <kernel-sprint@example.invalid>
+Date: Thu, 13 Aug 2026 09:27:38 +0000
+Subject: [PATCH] sched/fair: reduce base slice for lower wake-up latency
+
+sysctl_sched_base_slice controls the EEVDF requested time slice used
+to compute each sched_entity deadline (deadline = vruntime + slice /
+weight). Under CPU contention, a newly-woken task waits for the
+currently running task to reach its deadline before it can be picked
+by pick_eevdf(), so this constant directly bounds wake-up latency.
+
+Reduce it from the upstream default of 700us to 300us to lower
+wake-up latency for latency-sensitive workloads, at the cost of more
+frequent context switches. The EEVDF picking algorithm itself
+(__pick_eevdf()) and its fairness/eligibility rules are unchanged --
+this only retunes an existing constant.
+
+Measured with benchmark/scheduler_latency.c under 4-way CPU
+contention: see results/baseline/ vs results/optimized/ in the
+kernel-sprint project for before/after numbers.
+
+Signed-off-by: Kernel Sprint <kernel-sprint@example.invalid>
+---
+ kernel/sched/fair.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index c3a6b66b8..1543111bf 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -73,10 +73,10 @@ unsigned int sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
+ /*
+  * Minimal preemption granularity for CPU-bound tasks:
+  *
+- * (default: 0.70 msec * (1 + ilog(ncpus)), units: nanoseconds)
++ * (kernel-sprint: reduced from upstream 0.70 msec to 0.30 msec, units: nanoseconds)
+  */
+-unsigned int sysctl_sched_base_slice			= 700000ULL;
+-static unsigned int normalized_sysctl_sched_base_slice	= 700000ULL;
++unsigned int sysctl_sched_base_slice			= 300000ULL;
++static unsigned int normalized_sysctl_sched_base_slice	= 300000ULL;
+ 
+ /*
+  * After fork, child runs first. If set to 0 (default) then
+-- 
+2.43.0
+
