@@ -25,7 +25,7 @@ source .venv/bin/activate
 python main.py
 ```
 
-Binds to `127.0.0.1:8001` only — not reachable from the network. The
+Binds to `127.0.0.1:8877` only — not reachable from the network. The
 Next.js frontend (`../web`, `npm run dev`, port 3000) talks to it via
 CORS-restricted HTTP (`GET /api/environment`) and WebSocket
 (`/ws/lab`).

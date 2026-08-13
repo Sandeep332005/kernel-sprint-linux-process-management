@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 
-const BACKEND_HTTP = "http://localhost:8001";
-const BACKEND_WS = "ws://localhost:8001/ws/lab";
+const BACKEND_HTTP = "http://localhost:8877";
+const BACKEND_WS = "ws://localhost:8877/ws/lab";
 
 interface Environment {
   status: string;
