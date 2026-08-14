@@ -1,5 +1,5 @@
 import KernelWorkflowDiagram from "@/components/KernelWorkflowDiagram";
-import ProcessLifecycle from "@/components/ProcessLifecycle";
+import RealKernelWorkflow from "@/components/RealKernelWorkflow";
 
 export default function KernelWorkflowPage() {
   return (
@@ -21,10 +21,10 @@ export default function KernelWorkflowPage() {
 
       <section className="mt-10">
         <h2 className="mb-4 font-mono text-sm uppercase tracking-wide text-zinc-500">
-          Process lifecycle
+          Process lifecycle — live, driven by real kernel telemetry
         </h2>
         <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-8">
-          <ProcessLifecycle />
+          <RealKernelWorkflow />
         </div>
       </section>
     </div>
