@@ -16,6 +16,8 @@
 #   scripts/env.sh build    build the kernel-sprint-env Docker image
 #   scripts/env.sh shell    shell in the container, repo mounted at /workspace,
 #                           kernel source volume mounted at /kernel
+#   scripts/env.sh trim     reclaim host disk space from deleted-but-not-yet-
+#                           trimmed files inside the VM (see docs/environment-setup.md)
 #   scripts/env.sh down     stop the kernel-sprint Colima VM
 set -euo pipefail
 
@@ -38,11 +40,14 @@ case "${1:-}" in
       -v "$SRC_VOLUME:/kernel" \
       "$IMAGE" bash
     ;;
+  trim)
+    colima ssh --profile "$PROFILE" -- sudo fstrim -av
+    ;;
   down)
     colima stop --profile "$PROFILE"
     ;;
   *)
-    echo "usage: $0 {up|build|shell|down}" >&2
+    echo "usage: $0 {up|build|shell|trim|down}" >&2
     exit 1
     ;;
 esac

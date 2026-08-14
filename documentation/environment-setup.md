@@ -91,3 +91,31 @@ case variants of every colliding file exist and `git status` is clean.
 `kernel/.gitkeep` on the host is just a structure placeholder; the real
 source is only reachable via `scripts/env.sh shell` (mounted at
 `/kernel`) or any `docker run -v kernel-sprint-src:/kernel ...`.
+
+## Incident: VM disk doesn't shrink after deleting files inside it
+
+After building the web platform's backend orchestrator (real interactive
+lab, benchmark/patch pipelines, eBPF monitoring, chaos injection — all
+of which pull Docker images, build kernels, and write into the VM),
+host disk dropped from 25GB to 5.5GB free over the session even though
+nothing outside the VM changed. The `kernel-sprint` VM's own disk image
+(`~/.colima/_lima/_disks/colima-kernel-sprint/datadisk`) had silently
+grown to 22GB real (not sparse/nominal) usage on the host.
+
+Deleting the `kernel-sprint-src`/`kernel-sprint-build-*` Docker volumes
+freed space *inside* the VM's filesystem but did **not** shrink the
+host-side disk image file — virtual disks are sparse files that grow
+on write but don't automatically shrink on delete; the freed blocks
+need to be explicitly reported back via TRIM/discard. Fixed with:
+
+```
+colima ssh --profile kernel-sprint -- sudo fstrim -av
+```
+
+This alone reclaimed 19.6GB back to the host (5.5GB → 24GB free) with
+zero data loss for anything still present in the VM. Worth running
+periodically, not just during an emergency — `scripts/env.sh trim`
+wraps it. Deleting the volumes themselves is optional and destructive
+(re-cloning the kernel source takes ~1-2 min, rebuilding baseline/
+optimized takes ~6 min each) — `fstrim` alone doesn't require it, but
+reclaims more if genuinely-deleted large files exist to trim.
