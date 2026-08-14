@@ -9,11 +9,13 @@ touching the user's actual machine.
 import shlex
 import subprocess
 import threading
+from pathlib import Path
 
 from agents.docker_env import docker_env
 
 IMAGE = "kernel-sprint-env"
 CONTAINER = "kernel-sprint-lab"
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 COMMAND_TIMEOUT_SEC = 30
 
@@ -37,6 +39,7 @@ def ensure_container() -> None:
     _run(
         [
             "docker", "run", "-d", "--name", CONTAINER, "--privileged",
+            "-v", f"{REPO_ROOT}:/workspace:ro",
             IMAGE, "sleep", "infinity",
         ],
         timeout=30,

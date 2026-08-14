@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.benchmark import router as benchmark_router
 from api.chaos import router as chaos_router
+from api.experiments import router as experiments_router
 from api.lab import router as lab_router
 from api.monitor import router as monitor_router
 from api.patch import router as patch_router
@@ -29,6 +30,7 @@ app.include_router(benchmark_router)
 app.include_router(patch_router)
 app.include_router(monitor_router)
 app.include_router(chaos_router)
+app.include_router(experiments_router)
 
 
 @app.get("/")
@@ -39,6 +41,7 @@ def root():
         "endpoints": [
             "/api/environment", "/ws/lab", "/api/results", "/ws/benchmark",
             "/ws/patch", "/api/example-patch", "/ws/monitor", "/ws/chaos",
+            "/ws/experiments",
         ],
     }
 

@@ -11,6 +11,7 @@ const links = [
   { href: "/lab", label: "Lab" },
   { href: "/benchmark", label: "Benchmark" },
   { href: "/patch", label: "Patch" },
+  { href: "/experiments", label: "Experiments" },
   { href: "/chaos", label: "Chaos" },
   { href: "/results", label: "Results" },
   { href: "/docs", label: "Docs" },
