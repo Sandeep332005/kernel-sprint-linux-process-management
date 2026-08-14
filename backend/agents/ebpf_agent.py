@@ -37,7 +37,7 @@ def _exec(argv: list[str], timeout: int = 5) -> str:
     return result.stdout
 
 
-def _read_cpu_stat():
+def read_cpu_stat():
     line = _exec(["cat", "/proc/stat"]).splitlines()[0]
     parts = [int(x) for x in line.split()[1:]]
     idle = parts[3] + (parts[4] if len(parts) > 4 else 0)
@@ -45,7 +45,7 @@ def _read_cpu_stat():
     return idle, total
 
 
-def _read_memory_pct():
+def read_memory_pct():
     out = _exec(["sh", "-c", "free | awk '/Mem:/{printf \"%.1f\", $3/$2*100}'"]).strip()
     try:
         return float(out)
@@ -77,7 +77,7 @@ def stream_metrics(stop_event):
         text=True, bufsize=1,
     )
 
-    prev_idle, prev_total = _read_cpu_stat()
+    prev_idle, prev_total = read_cpu_stat()
     pending_switches = None
     try:
         for line in proc.stdout:
@@ -95,7 +95,7 @@ def stream_metrics(stop_event):
 
             wakeups = int(wakeups_match.group(1))
 
-            idle, total = _read_cpu_stat()
+            idle, total = read_cpu_stat()
             idle_delta = idle - prev_idle
             total_delta = total - prev_total
             cpu_pct = round(100 * (1 - idle_delta / total_delta), 1) if total_delta > 0 else 0.0
@@ -105,7 +105,7 @@ def stream_metrics(stop_event):
                 "context_switches_per_sec": pending_switches,
                 "wakeups_per_sec": wakeups,
                 "cpu_pct": cpu_pct,
-                "memory_pct": _read_memory_pct(),
+                "memory_pct": read_memory_pct(),
                 "processes": _read_top_processes(),
             }
             pending_switches = None

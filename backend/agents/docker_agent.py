@@ -45,6 +45,11 @@ def ensure_container() -> None:
     # containers -- needed for bpftrace/perf tracepoint access.
     _run(["docker", "exec", CONTAINER, "mount", "-t", "debugfs", "debugfs", "/sys/kernel/debug"], timeout=10)
     _run(["docker", "exec", CONTAINER, "mount", "-t", "tracefs", "tracefs", "/sys/kernel/tracing"], timeout=10)
+    # iproute2 (tc/ip) isn't in the base image -- installed into the
+    # container's writable layer rather than rebuilding the whole image
+    # for it (a few MB vs. a full image rebuild). Used by chaos_agent's
+    # network-delay injection.
+    _run(["docker", "exec", CONTAINER, "bash", "-c", "apt-get update -qq && apt-get install -y -qq iproute2"], timeout=60)
 
 
 def is_connected() -> bool:
