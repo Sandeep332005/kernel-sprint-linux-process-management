@@ -3,15 +3,40 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import ProcessLifecycle from "@/components/ProcessLifecycle";
+import {
+  OrchestrateIcon,
+  WorkflowIcon,
+  SetupIcon,
+  LabIcon,
+  BenchmarkIcon,
+  PatchIcon,
+  ExperimentsIcon,
+  ChaosIcon,
+  ResultsIcon,
+  DocsIcon,
+} from "@/components/Icons";
+
+const explore = [
+  { href: "/orchestrate", label: "Orchestrate", icon: OrchestrateIcon, body: "System architecture, honestly diagrammed" },
+  { href: "/kernel-workflow", label: "Kernel Workflow", icon: WorkflowIcon, body: "Live-telemetry-paced process lifecycle" },
+  { href: "/setup", label: "Setup", icon: SetupIcon, body: "The real steps this project used" },
+  { href: "/lab", label: "Lab", icon: LabIcon, body: "Real sandboxed terminal + eBPF monitoring" },
+  { href: "/benchmark", label: "Benchmark", icon: BenchmarkIcon, body: "Real 3-run comparison + live pipeline" },
+  { href: "/patch", label: "Patch", icon: PatchIcon, body: "Upload a diff, get a real report" },
+  { href: "/experiments", label: "Experiments", icon: ExperimentsIcon, body: "Fast parameterized real tests" },
+  { href: "/chaos", label: "Chaos", icon: ChaosIcon, body: "Real failure injection, fully sandboxed" },
+  { href: "/results", label: "Results", icon: ResultsIcon, body: "The captured before/after report" },
+  { href: "/docs", label: "Docs", icon: DocsIcon, body: "EEVDF, eBPF, and what changed" },
+];
 
 export default function Home() {
   return (
-    <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-12 px-6 py-20 text-center">
+    <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-16 px-6 py-20 text-center">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="space-y-4"
+        className="max-w-2xl space-y-4"
       >
         <p className="font-mono text-sm uppercase tracking-widest text-emerald-400">
           Kernel Sprint
@@ -19,11 +44,10 @@ export default function Home() {
         <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
           Linux Process Management Challenge
         </h1>
-        <p className="mx-auto max-w-2xl text-zinc-400">
-          Analyze the Completely Fair Scheduler, find a measurable
-          bottleneck, implement a kernel-level optimization, and prove the
-          improvement with benchmark evidence — all while staying POSIX
-          compliant.
+        <p className="mx-auto text-zinc-400">
+          Analyze the EEVDF scheduler, find a measurable bottleneck, implement
+          a kernel-level optimization, and prove the improvement with real
+          benchmark evidence — all while staying POSIX compliant.
         </p>
         <div className="flex justify-center gap-3 pt-2">
           <Link
@@ -33,10 +57,10 @@ export default function Home() {
             Enter the Lab
           </Link>
           <Link
-            href="/kernel-workflow"
+            href="/orchestrate"
             className="rounded-md border border-zinc-700 px-5 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-zinc-500"
           >
-            See the Workflow
+            See the Architecture
           </Link>
         </div>
       </motion.div>
@@ -47,6 +71,34 @@ export default function Home() {
         transition={{ delay: 0.3, duration: 0.6 }}
       >
         <ProcessLifecycle />
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.6 }}
+        className="w-full"
+      >
+        <p className="mb-5 font-mono text-xs uppercase tracking-wide text-zinc-500">
+          Explore the platform
+        </p>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+          {explore.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="group flex flex-col items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 p-4 text-left transition-colors hover:border-emerald-800"
+            >
+              <item.icon className="h-6 w-6 text-emerald-400" />
+              <span className="text-center text-sm font-medium text-zinc-100">
+                {item.label}
+              </span>
+              <span className="text-center text-xs text-zinc-500 group-hover:text-zinc-400">
+                {item.body}
+              </span>
+            </Link>
+          ))}
+        </div>
       </motion.div>
     </div>
   );

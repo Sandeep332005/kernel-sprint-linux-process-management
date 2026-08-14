@@ -1,14 +1,17 @@
 import KernelWorkflowDiagram from "@/components/KernelWorkflowDiagram";
 import RealKernelWorkflow from "@/components/RealKernelWorkflow";
+import PageHeader from "@/components/PageHeader";
+import { WorkflowIcon } from "@/components/Icons";
 
 export default function KernelWorkflowPage() {
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-16">
-      <h1 className="text-3xl font-semibold">Kernel Workflow</h1>
-      <p className="mt-2 text-zinc-400">
-        From source to a running kernel, and the path a process takes once
-        it's up.
-      </p>
+      <PageHeader icon={<WorkflowIcon className="h-5 w-5" />} title="Kernel Workflow">
+        <p>
+          From source to a running kernel, and the path a process takes once
+          it&apos;s up.
+        </p>
+      </PageHeader>
 
       <section className="mt-10">
         <h2 className="mb-4 font-mono text-sm uppercase tracking-wide text-zinc-500">

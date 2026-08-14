@@ -1,15 +1,102 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import PageHeader from "@/components/PageHeader";
+import { ResultsIcon } from "@/components/Icons";
+
+const BACKEND_HTTP = "http://localhost:8877";
+
+interface KernelResult {
+  kernel: string;
+  sysctl_sched_base_slice_ns: number;
+  process_creation: { mean_us: number; p99_us: number };
+  context_switch: { switches_per_sec: number };
+  scheduler_latency: { mean_us: number; p99_us: number };
+}
+
+interface Results {
+  runs: number;
+  environment: string;
+  baseline: KernelResult;
+  optimized: KernelResult;
+  note: string;
+}
+
+function KernelCard({ label, k }: { label: string; k: KernelResult }) {
+  return (
+    <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-5">
+      <p className="font-mono text-xs uppercase tracking-wide text-zinc-500">{label}</p>
+      <p className="mt-1 text-sm text-zinc-200">{k.kernel}</p>
+      <p className="mt-1 font-mono text-xs text-zinc-500">
+        base_slice_ns = {k.sysctl_sched_base_slice_ns.toLocaleString()}
+      </p>
+      <div className="mt-4 grid grid-cols-3 gap-3 font-mono text-xs">
+        <div>
+          <div className="text-zinc-500">proc_create p99</div>
+          <div className="text-zinc-200">{k.process_creation.p99_us.toFixed(1)} µs</div>
+        </div>
+        <div>
+          <div className="text-zinc-500">switches/sec</div>
+          <div className="text-zinc-200">{k.context_switch.switches_per_sec.toFixed(0)}</div>
+        </div>
+        <div>
+          <div className="text-zinc-500">sched_latency p99</div>
+          <div className="text-zinc-200">{k.scheduler_latency.p99_us.toFixed(1)} µs</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ResultsPage() {
+  const [results, setResults] = useState<Results | null>(null);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    fetch(`${BACKEND_HTTP}/api/results`)
+      .then((r) => r.json())
+      .then(setResults)
+      .catch(() => setError(true));
+  }, []);
+
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-16">
-      <h1 className="text-3xl font-semibold">Benchmark Reports</h1>
-      <p className="mt-2 text-zinc-400">
-        Populate this list from{" "}
-        <code className="text-zinc-300">results/baseline/</code> and{" "}
-        <code className="text-zinc-300">results/optimized/</code> once real
-        benchmark runs exist.
-      </p>
-      <div className="mt-10 rounded-lg border border-dashed border-zinc-800 p-8 text-center text-sm text-zinc-500">
-        No benchmark runs recorded yet.
+      <PageHeader icon={<ResultsIcon className="h-5 w-5" />} title="Benchmark Reports">
+        <p>
+          The captured before/after comparison — real boot-tested runs, not
+          placeholder numbers. Full report:{" "}
+          <code className="text-zinc-300">documentation/performance-report.md</code>.
+        </p>
+      </PageHeader>
+
+      <div className="mt-10">
+        {error && (
+          <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-8 text-center text-sm text-zinc-500">
+            Backend not reachable at {BACKEND_HTTP} — start it with{" "}
+            <code className="text-zinc-300">python backend/main.py</code>.
+          </div>
+        )}
+
+        {!error && !results && (
+          <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-8 text-center text-sm text-zinc-500">
+            Loading real results…
+          </div>
+        )}
+
+        {results && (
+          <div className="space-y-4">
+            <p className="text-xs text-zinc-500">
+              {results.runs} runs each · {results.environment}
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <KernelCard label="Baseline" k={results.baseline} />
+              <KernelCard label="Optimized" k={results.optimized} />
+            </div>
+            <p className="rounded-lg border border-zinc-800 bg-zinc-950 p-4 text-xs leading-relaxed text-zinc-500">
+              {results.note}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

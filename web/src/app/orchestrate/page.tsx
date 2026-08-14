@@ -1,4 +1,6 @@
 import ArchitectureDiagram from "@/components/ArchitectureDiagram";
+import PageHeader from "@/components/PageHeader";
+import { OrchestrateIcon } from "@/components/Icons";
 
 const deviations = [
   {
@@ -18,11 +20,13 @@ const deviations = [
 export default function OrchestratePage() {
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-16">
-      <h1 className="text-3xl font-semibold">System Architecture</h1>
-      <p className="mt-2 text-zinc-400">
-        How a command typed in the browser actually reaches a real sandboxed
-        kernel — every layer below is real code, not a design placeholder.
-      </p>
+      <PageHeader icon={<OrchestrateIcon className="h-5 w-5" />} title="System Architecture">
+        <p>
+          How a command typed in the browser actually reaches a real
+          sandboxed kernel — every layer below is real code, not a design
+          placeholder.
+        </p>
+      </PageHeader>
 
       <div className="mt-10 rounded-lg border border-zinc-800 bg-zinc-950 p-8">
         <ArchitectureDiagram />
