@@ -65,28 +65,30 @@ export default function RealTerminal() {
 
   return (
     <div className="w-full space-y-4">
-      <div className="grid grid-cols-2 gap-3 rounded-lg border border-zinc-800 bg-zinc-950 p-4 text-sm sm:grid-cols-5">
-        <div>
-          <div className="text-xs text-zinc-500">Status</div>
-          <div className={env.status === "connected" ? "text-emerald-400" : "text-rose-400"}>
-            {env.status === "connected" ? "Connected" : env.status === "connecting" ? "Connecting…" : "Disconnected"}
+      <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4 text-sm">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div>
+            <div className="text-xs text-zinc-500">Status</div>
+            <div className={env.status === "connected" ? "text-emerald-400" : "text-rose-400"}>
+              {env.status === "connected" ? "Connected" : env.status === "connecting" ? "Connecting…" : "Disconnected"}
+            </div>
+          </div>
+          <div>
+            <div className="text-xs text-zinc-500">Kernel</div>
+            <div className="text-zinc-200">{env.kernel ?? "—"}</div>
+          </div>
+          <div>
+            <div className="text-xs text-zinc-500">CPU</div>
+            <div className="text-zinc-200">{env.cpu ?? "—"}</div>
+          </div>
+          <div>
+            <div className="text-xs text-zinc-500">Memory</div>
+            <div className="text-zinc-200">{env.memory ?? "—"}</div>
           </div>
         </div>
-        <div>
-          <div className="text-xs text-zinc-500">Kernel</div>
-          <div className="text-zinc-200">{env.kernel ?? "—"}</div>
-        </div>
-        <div>
-          <div className="text-xs text-zinc-500">Machine</div>
-          <div className="truncate text-zinc-200" title={env.machine}>{env.machine ? "sandboxed container" : "—"}</div>
-        </div>
-        <div>
-          <div className="text-xs text-zinc-500">CPU</div>
-          <div className="text-zinc-200">{env.cpu ?? "—"}</div>
-        </div>
-        <div>
-          <div className="text-xs text-zinc-500">Memory</div>
-          <div className="text-zinc-200">{env.memory ?? "—"}</div>
+        <div className="mt-3 border-t border-zinc-800 pt-3">
+          <div className="text-xs text-zinc-500">Machine (uname -a, from the sandboxed container)</div>
+          <div className="mt-1 break-all font-mono text-xs text-zinc-300">{env.machine ?? "—"}</div>
         </div>
       </div>
 
