@@ -7,9 +7,7 @@ export default function LabPage() {
       <h1 className="text-3xl font-semibold">Interactive Lab</h1>
       <p className="mt-2 text-zinc-400">
         Real commands, really executed — inside the sandboxed
-        kernel-sprint-env container, never on the host. Start the backend
-        with <code className="text-zinc-300">backend/main.py</code> (see
-        README) for this to connect.
+        kernel-sprint-env container, never on the host.
       </p>
       <div className="mt-8 space-y-8">
         <RealTerminal />
