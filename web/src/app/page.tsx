@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import ProcessLifecycle from "@/components/ProcessLifecycle";
+import HeroArt from "@/components/HeroArt";
 import {
   OrchestrateIcon,
   WorkflowIcon,
@@ -31,12 +32,15 @@ const explore = [
 
 export default function Home() {
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-16 px-6 py-20 text-center">
+    <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center gap-16 px-6 py-20 text-center">
+      <div className="pointer-events-none absolute inset-0 isolate overflow-hidden">
+        <HeroArt />
+      </div>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="max-w-2xl space-y-4"
+        className="relative z-10 max-w-2xl space-y-4"
       >
         <p className="font-mono text-sm uppercase tracking-widest text-emerald-400">
           Kernel Sprint
