@@ -1,0 +1,10 @@
+[
+  {
+    "date": "2026-08-14",
+    "scope": "app",
+    "macrostructure": "Workbench (app pages) + Stat-Led/icon-grid (content pages)",
+    "theme": "preserved (zinc/emerald, Geist Sans + Mono)",
+    "enrichment": "icon-led structure on content pages only; none on app pages",
+    "brief": "Kernel Sprint · real Linux kernel scheduler research and orchestration dashboard"
+  }
+]

@@ -38,11 +38,19 @@ export default function OrchestratePage() {
         </h2>
         <div className="space-y-4">
           {deviations.map((d) => (
-            <div key={d.spec} className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
-              <p className="font-mono text-xs text-zinc-500">Spec said:</p>
-              <p className="text-sm text-zinc-300">{d.spec}</p>
-              <p className="mt-2 font-mono text-xs text-emerald-500">What actually exists:</p>
-              <p className="text-sm text-zinc-400">{d.actual}</p>
+            <div
+              key={d.spec}
+              className="grid gap-4 rounded-lg border border-zinc-800 bg-zinc-950 p-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center"
+            >
+              <div>
+                <p className="font-mono text-xs uppercase tracking-wide text-zinc-600">Spec said</p>
+                <p className="mt-1 text-sm text-zinc-400">{d.spec}</p>
+              </div>
+              <span className="hidden text-zinc-700 sm:block">→</span>
+              <div>
+                <p className="font-mono text-xs uppercase tracking-wide text-emerald-500">What actually exists</p>
+                <p className="mt-1 text-sm text-zinc-200">{d.actual}</p>
+              </div>
             </div>
           ))}
         </div>

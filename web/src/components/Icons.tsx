@@ -148,3 +148,26 @@ export function DocsIcon({ className }: IconProps) {
     className
   );
 }
+
+export function ForkIcon({ className }: IconProps) {
+  return wrap(
+    <>
+      <circle cx="6" cy="5" r="2" />
+      <circle cx="6" cy="19" r="2" />
+      <circle cx="18" cy="12" r="2" />
+      <path d="M6 7v6M8 12h8M6 13a6 6 0 0 0 0 4" />
+    </>,
+    className
+  );
+}
+
+export function TraceIcon({ className }: IconProps) {
+  return wrap(
+    <>
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="M20 20l-4.5-4.5" />
+      <path d="M8 11h6M11 8v6" />
+    </>,
+    className
+  );
+}
