@@ -6,28 +6,21 @@ so this bounds the blast radius of "live command execution from a web
 page" to something that can be torn down and rebuilt, rather than
 touching the user's actual machine.
 """
-import os
 import shlex
 import subprocess
 import threading
-from pathlib import Path
 
-DOCKER_SOCK = f"unix://{Path.home()}/.colima/kernel-sprint/docker.sock"
+from agents.docker_env import docker_env
+
 IMAGE = "kernel-sprint-env"
 CONTAINER = "kernel-sprint-lab"
 
 COMMAND_TIMEOUT_SEC = 30
 
 
-def _docker_env():
-    env = os.environ.copy()
-    env["DOCKER_HOST"] = DOCKER_SOCK
-    return env
-
-
 def _run(argv: list[str], timeout: int = 15) -> subprocess.CompletedProcess:
     return subprocess.run(
-        argv, env=_docker_env(), capture_output=True, text=True, timeout=timeout
+        argv, env=docker_env(), capture_output=True, text=True, timeout=timeout
     )
 
 
@@ -48,6 +41,10 @@ def ensure_container() -> None:
         ],
         timeout=30,
     )
+    # debugfs/tracefs aren't mounted by default even in --privileged
+    # containers -- needed for bpftrace/perf tracepoint access.
+    _run(["docker", "exec", CONTAINER, "mount", "-t", "debugfs", "debugfs", "/sys/kernel/debug"], timeout=10)
+    _run(["docker", "exec", CONTAINER, "mount", "-t", "tracefs", "tracefs", "/sys/kernel/tracing"], timeout=10)
 
 
 def is_connected() -> bool:
@@ -92,7 +89,7 @@ def stream_command(command_line: str, timeout: int = COMMAND_TIMEOUT_SEC):
     full_argv = ["docker", "exec", CONTAINER] + argv
     proc = subprocess.Popen(
         full_argv,
-        env=_docker_env(),
+        env=docker_env(),
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,

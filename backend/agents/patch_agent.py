@@ -10,13 +10,13 @@ bad or malicious patch can't corrupt the shared source tree -- worst
 case the container's build/boot fails and gets thrown away.
 """
 import json
-import os
 import shutil
 import subprocess
 import uuid
 from pathlib import Path
 
-from agents.qemu_agent import DOCKER_SOCK, IMAGE, REPO_ROOT, STAGE_RE, parse_benchmark_output
+from agents.docker_env import docker_env
+from agents.qemu_agent import IMAGE, REPO_ROOT, STAGE_RE, parse_benchmark_output
 
 # Colima only shares paths under the home directory into the VM via
 # virtiofs -- macOS's default tempfile.TemporaryDirectory() lands under
@@ -72,12 +72,6 @@ echo '@@STAGE:boot:done@@'
 """
 
 
-def _docker_env():
-    env = os.environ.copy()
-    env["DOCKER_HOST"] = DOCKER_SOCK
-    return env
-
-
 def _extract_apply_error(text: str) -> str:
     lines = [l for l in text.splitlines() if "error:" in l.lower()]
     return lines[0] if lines else "patch did not apply cleanly (git apply rejected it)"
@@ -110,7 +104,7 @@ def run_patch_pipeline(patch_text: str):
         ]
 
         proc = subprocess.Popen(
-            argv, env=_docker_env(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            argv, env=docker_env(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             text=True, bufsize=1,
         )
 

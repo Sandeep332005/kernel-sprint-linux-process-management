@@ -10,12 +10,12 @@ sentinel markers in the container's stdout) so the web UI can show
 live compile/boot/execute/collect progress instead of a single opaque
 blocking call.
 """
-import os
 import re
 import subprocess
 from pathlib import Path
 
-DOCKER_SOCK = f"unix://{Path.home()}/.colima/kernel-sprint/docker.sock"
+from agents.docker_env import docker_env
+
 IMAGE = "kernel-sprint-env"
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
@@ -47,12 +47,6 @@ timeout 90 qemu-system-aarch64 \
   -nographic -no-reboot
 echo '@@STAGE:boot:done@@'
 """
-
-
-def _docker_env():
-    env = os.environ.copy()
-    env["DOCKER_HOST"] = DOCKER_SOCK
-    return env
 
 
 def parse_benchmark_output(text: str) -> dict:
@@ -107,7 +101,7 @@ def run_benchmark_pipeline(kernel: str):
     ]
 
     proc = subprocess.Popen(
-        argv, env=_docker_env(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        argv, env=docker_env(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
         text=True, bufsize=1,
     )
 

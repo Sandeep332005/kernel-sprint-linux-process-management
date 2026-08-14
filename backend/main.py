@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.benchmark import router as benchmark_router
 from api.lab import router as lab_router
+from api.monitor import router as monitor_router
 from api.patch import router as patch_router
 
 app = FastAPI(title="Kernel Sprint Orchestrator")
@@ -25,6 +26,7 @@ app.add_middleware(
 app.include_router(lab_router)
 app.include_router(benchmark_router)
 app.include_router(patch_router)
+app.include_router(monitor_router)
 
 
 @app.get("/")
@@ -32,7 +34,10 @@ def root():
     return {
         "service": "kernel-sprint-orchestrator",
         "frontend": "http://localhost:4477 (the actual website)",
-        "endpoints": ["/api/environment", "/ws/lab", "/api/results", "/ws/benchmark", "/ws/patch"],
+        "endpoints": [
+            "/api/environment", "/ws/lab", "/api/results", "/ws/benchmark",
+            "/ws/patch", "/api/example-patch", "/ws/monitor",
+        ],
     }
 
 
