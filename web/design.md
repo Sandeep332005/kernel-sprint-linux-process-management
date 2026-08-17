@@ -29,22 +29,37 @@ Two families, split by what the page actually is:
 
 ## Theme
 
-This project already has a coherent, non-templated palette — preserved, not
-replaced. Expressed as the Tailwind v4 tokens actually in use (this app
-styles via Tailwind utility classes, not raw CSS custom properties — the
-"tokens" below are the locked *Tailwind class vocabulary*, serving the same
+This project has a coherent, non-templated palette, now shipped in **both**
+light and dark — the original dark palette was preserved as-is, and a light
+counterpart was added rather than replacing it. Class-based dark mode via
+Tailwind v4's `@custom-variant dark (&:where(.dark, .dark *));`
+(`app/globals.css`), toggled by adding/removing `.dark` on `<html>`.
+`ThemeScript.tsx` applies the stored/system preference before first paint
+(no flash); `ThemeToggle.tsx` (in `Nav`) flips it and persists to
+`localStorage`. Defaults to the visitor's OS preference on first visit.
+
+Expressed as the Tailwind v4 class pairs actually in use (this app styles
+via Tailwind utility classes, not raw CSS custom properties — the "tokens"
+below are the locked *Tailwind class vocabulary*, serving the same
 consistency purpose as a `tokens.css` would):
 
-| Role | Tailwind class | Approx. OKLCH |
+| Role | Light | Dark |
 |---|---|---|
-| Paper (page bg) | `bg-black` | oklch(0% 0 0) |
-| Panel bg | `bg-zinc-950` | oklch(14% 0.004 285) |
-| Panel border | `border-zinc-800` | oklch(27% 0.006 286) |
-| Body text | `text-zinc-400` | oklch(58% 0.007 286) |
-| Heading text | `text-zinc-100` | oklch(92% 0.003 286) |
-| Accent | `text-emerald-400` / `bg-emerald-500` | oklch(76% 0.15 163) / oklch(70% 0.16 163) |
-| Danger/chaos | `text-rose-400`, `border-rose-900` | oklch(70% 0.16 15) |
-| Warning | `text-amber-500` | oklch(75% 0.16 75) |
+| Paper (page bg) | `bg-white` | `dark:bg-black` |
+| Panel bg | `bg-zinc-50` | `dark:bg-zinc-950` |
+| Panel border | `border-zinc-200` | `dark:border-zinc-800` |
+| Body text | `text-zinc-600` | `dark:text-zinc-400` |
+| Heading text | `text-zinc-900` | `dark:text-zinc-100` |
+| Accent | `text-emerald-600` | `dark:text-emerald-400` (fill `bg-emerald-500` unchanged both) |
+| Danger/chaos | `text-rose-600`, `border-rose-300` | `dark:text-rose-400`, `dark:border-rose-900` |
+| Warning | `text-amber-600` | `dark:text-amber-500` |
+
+Framer Motion `animate={{ backgroundColor: ... }}` targets (the three
+step-diagram components: `ProcessLifecycle`, `KernelWorkflowDiagram`,
+`RealKernelWorkflow`) can't use Tailwind's `dark:` classes — motion needs a
+concrete color to interpolate, not a CSS variable — so they read
+`useIsDark()` (`src/hooks/useIsDark.ts`, a `MutationObserver` on `<html>`'s
+class list) and branch their hex literals explicitly.
 
 Accent (emerald) stays under 5% of any viewport — used for active states,
 key numbers, and icons, never as a fill background beyond buttons.

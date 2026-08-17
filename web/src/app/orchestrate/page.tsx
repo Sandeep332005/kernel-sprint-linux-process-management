@@ -29,7 +29,7 @@ export default function OrchestratePage() {
         </p>
       </PageHeader>
 
-      <div className="mt-10 rounded-lg border border-zinc-800 bg-zinc-950 p-6">
+      <div className="mt-10 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-6">
         <SystemTree />
       </div>
 
@@ -48,16 +48,16 @@ export default function OrchestratePage() {
           {deviations.map((d) => (
             <div
               key={d.spec}
-              className="grid gap-4 rounded-lg border border-zinc-800 bg-zinc-950 p-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center"
+              className="grid gap-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center"
             >
               <div>
-                <p className="font-mono text-xs uppercase tracking-wide text-zinc-600">Spec said</p>
-                <p className="mt-1 text-sm text-zinc-400">{d.spec}</p>
+                <p className="font-mono text-xs uppercase tracking-wide text-zinc-500 dark:text-zinc-600">Spec said</p>
+                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{d.spec}</p>
               </div>
-              <span className="hidden text-zinc-700 sm:block">→</span>
+              <span className="hidden text-zinc-400 dark:text-zinc-700 sm:block">→</span>
               <div>
-                <p className="font-mono text-xs uppercase tracking-wide text-emerald-500">What actually exists</p>
-                <p className="mt-1 text-sm text-zinc-200">{d.actual}</p>
+                <p className="font-mono text-xs uppercase tracking-wide text-emerald-600 dark:text-emerald-500">What actually exists</p>
+                <p className="mt-1 text-sm text-zinc-800 dark:text-zinc-200">{d.actual}</p>
               </div>
             </div>
           ))}

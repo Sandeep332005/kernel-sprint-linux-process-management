@@ -17,7 +17,7 @@ export default function KernelWorkflowPage() {
         <h2 className="mb-4 font-mono text-sm uppercase tracking-wide text-zinc-500">
           Compilation pipeline
         </h2>
-        <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-8">
+        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-8">
           <KernelWorkflowDiagram />
         </div>
       </section>
@@ -26,7 +26,7 @@ export default function KernelWorkflowPage() {
         <h2 className="mb-4 font-mono text-sm uppercase tracking-wide text-zinc-500">
           Process lifecycle — live, driven by real kernel telemetry
         </h2>
-        <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-8">
+        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-8">
           <RealKernelWorkflow />
         </div>
       </section>

@@ -68,7 +68,7 @@ export default function ChaosPanel() {
   return (
     <div className="space-y-4">
       {error && (
-        <div className="rounded-lg border border-rose-900 bg-rose-950/30 p-4 text-sm text-rose-300">
+        <div className="rounded-lg border border-rose-300 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/30 p-4 text-sm text-rose-700 dark:text-rose-300">
           {error}
         </div>
       )}
@@ -78,10 +78,10 @@ export default function ChaosPanel() {
           const result = results[action.key];
           const isRunning = running === action.key;
           return (
-            <div key={action.key} className="rounded-lg border border-zinc-800 bg-zinc-950 p-5">
+            <div key={action.key} className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-5">
               <div className="mb-3 flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-zinc-100">{action.label}</p>
+                  <p className="font-medium text-zinc-900 dark:text-zinc-100">{action.label}</p>
                   <p className="font-mono text-xs text-zinc-500">{action.description}</p>
                 </div>
                 <button
@@ -100,7 +100,7 @@ export default function ChaosPanel() {
                       key={i}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="rounded bg-zinc-800 px-1.5 py-0.5 font-mono text-[10px] text-zinc-400"
+                      className="rounded bg-zinc-200 dark:bg-zinc-800 px-1.5 py-0.5 font-mono text-[10px] text-zinc-600 dark:text-zinc-400"
                     >
                       {JSON.stringify(s).slice(0, 40)}
                     </motion.span>
@@ -113,10 +113,10 @@ export default function ChaosPanel() {
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   className={`rounded-md border p-3 text-xs ${
-                    result.detected ? "border-amber-900 bg-amber-950/20" : "border-zinc-800 bg-zinc-900"
+                    result.detected ? "border-amber-300 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/20" : "border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900"
                   }`}
                 >
-                  <p className="text-zinc-300">{result.detection_message}</p>
+                  <p className="text-zinc-700 dark:text-zinc-300">{result.detection_message}</p>
                   <p className="mt-1 text-zinc-500">{result.recommendation}</p>
                 </motion.div>
               )}

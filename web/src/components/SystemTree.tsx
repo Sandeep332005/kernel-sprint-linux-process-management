@@ -91,7 +91,7 @@ export default function SystemTree() {
   return (
     <svg
       viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-      className="h-auto w-full text-zinc-700"
+      className="h-auto w-full text-zinc-400 dark:text-zinc-700"
       role="img"
       aria-label="kernel-sprint system architecture tree"
     >

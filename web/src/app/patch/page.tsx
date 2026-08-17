@@ -13,7 +13,7 @@ export default function PatchPage() {
           simulated. A full run takes several minutes (the build itself is
           the slow part).
         </p>
-        <p className="text-sm text-amber-500">
+        <p className="text-sm text-amber-600 dark:text-amber-500">
           Avoid running other CPU-heavy work on this machine while a run is
           in progress — the QEMU guest shares physical cores with the host,
           so host load shows up as scheduler-latency noise unrelated to the

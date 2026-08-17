@@ -83,7 +83,7 @@ export default function LiveBenchmarkRunner() {
   }
 
   return (
-    <div className="w-full max-w-xl space-y-5 rounded-lg border border-zinc-800 bg-zinc-950 p-6">
+    <div className="w-full max-w-xl space-y-5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-6">
       <div className="flex items-center justify-between gap-4">
         <div className="flex gap-2">
           {(["baseline", "optimized"] as const).map((k) => (
@@ -93,8 +93,8 @@ export default function LiveBenchmarkRunner() {
               disabled={running}
               className={`rounded-md border px-3 py-1.5 text-xs font-mono transition-colors disabled:opacity-50 ${
                 kernel === k
-                  ? "border-emerald-500 bg-emerald-500/10 text-emerald-400"
-                  : "border-zinc-700 text-zinc-400"
+                  ? "border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                  : "border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400"
               }`}
             >
               {k}
@@ -114,30 +114,30 @@ export default function LiveBenchmarkRunner() {
         {STAGES.map((s) => (
           <div key={s.key} className="flex items-center gap-2">
             <StageDot status={stages[s.key]} />
-            <span className="font-mono text-xs text-zinc-400">{s.label}</span>
+            <span className="font-mono text-xs text-zinc-600 dark:text-zinc-400">{s.label}</span>
           </div>
         ))}
       </div>
 
-      {error && <p className="text-xs text-rose-400">{error}</p>}
+      {error && <p className="text-xs text-rose-600 dark:text-rose-400">{error}</p>}
 
       {result && (
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-3 gap-4 border-t border-zinc-800 pt-4 font-mono text-xs"
+          className="grid grid-cols-3 gap-4 border-t border-zinc-200 dark:border-zinc-800 pt-4 font-mono text-xs"
         >
           <div>
             <div className="text-zinc-500">process_creation p99</div>
-            <div className="text-zinc-200">{result.process_creation?.p99_us.toFixed(1)} µs</div>
+            <div className="text-zinc-800 dark:text-zinc-200">{result.process_creation?.p99_us.toFixed(1)} µs</div>
           </div>
           <div>
             <div className="text-zinc-500">context switches/sec</div>
-            <div className="text-zinc-200">{result.context_switch?.switches_per_sec.toFixed(0)}</div>
+            <div className="text-zinc-800 dark:text-zinc-200">{result.context_switch?.switches_per_sec.toFixed(0)}</div>
           </div>
           <div>
             <div className="text-zinc-500">scheduler_latency p99</div>
-            <div className="text-zinc-200">{result.scheduler_latency?.p99_us.toFixed(1)} µs</div>
+            <div className="text-zinc-800 dark:text-zinc-200">{result.scheduler_latency?.p99_us.toFixed(1)} µs</div>
           </div>
         </motion.div>
       )}

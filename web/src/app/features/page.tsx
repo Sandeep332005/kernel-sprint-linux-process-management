@@ -66,7 +66,7 @@ export default function FeaturesPage() {
       <PageHeader icon={<FeaturesIcon className="h-5 w-5" />} title="Capabilities">
         <p>
           What this platform does beyond static documentation.{" "}
-          <span className="inline-flex items-center gap-1.5 text-emerald-400">
+          <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Live
           </span>{" "}
           marks pages backed by a real running backend, not prose.
@@ -76,22 +76,22 @@ export default function FeaturesPage() {
         {features.map((f) => (
           <div
             key={f.title}
-            className={`rounded-lg border border-zinc-800 bg-zinc-950 p-5 ${
+            className={`rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-5 ${
               f.span ? "lg:col-span-2" : ""
             }`}
           >
             <div className="flex items-center justify-between gap-2.5">
               <div className="flex items-center gap-2.5">
-                <f.icon className="h-5 w-5 shrink-0 text-emerald-400" />
-                <h2 className="font-medium text-emerald-400">{f.title}</h2>
+                <f.icon className="h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                <h2 className="font-medium text-emerald-600 dark:text-emerald-400">{f.title}</h2>
               </div>
               {f.live && (
-                <span className="flex items-center gap-1 rounded-full border border-emerald-900 bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] text-emerald-400">
+                <span className="flex items-center gap-1 rounded-full border border-emerald-300 dark:border-emerald-900 bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] text-emerald-600 dark:text-emerald-400">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> LIVE
                 </span>
               )}
             </div>
-            <p className="mt-2 text-sm text-zinc-400">{f.body}</p>
+            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{f.body}</p>
           </div>
         ))}
       </div>

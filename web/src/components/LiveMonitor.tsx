@@ -40,7 +40,7 @@ function Gauge({ label, pct }: { label: string; pct: number | null }) {
         <span>{label}</span>
         <span>{pct != null ? `${pct.toFixed(1)}%` : "—"}</span>
       </div>
-      <div className="h-2 rounded bg-zinc-800">
+      <div className="h-2 rounded bg-zinc-200 dark:bg-zinc-800">
         <motion.div
           animate={{ width: `${pct ?? 0}%` }}
           transition={{ duration: 0.4 }}
@@ -78,14 +78,14 @@ export default function LiveMonitor() {
 
   if (error) {
     return (
-      <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-6 text-center text-sm text-zinc-500">
+      <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-6 text-center text-sm text-zinc-500">
         {error}
       </div>
     );
   }
 
   return (
-    <div className="space-y-4 rounded-lg border border-zinc-800 bg-zinc-950 p-5">
+    <div className="space-y-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-5">
       <div className="flex items-center justify-between">
         <p className="font-mono text-xs uppercase tracking-wide text-zinc-500">
           Live eBPF monitoring (real sched_switch / sched_wakeup tracepoints via bpftrace)
@@ -118,14 +118,14 @@ export default function LiveMonitor() {
           <p className="mb-2 font-mono text-xs text-zinc-500">top processes</p>
           <table className="w-full font-mono text-xs">
             <thead>
-              <tr className="text-zinc-600">
+              <tr className="text-zinc-500 dark:text-zinc-600">
                 <th className="text-left font-normal">PID</th>
                 <th className="text-left font-normal">NAME</th>
                 <th className="text-right font-normal">CPU%</th>
                 <th className="text-right font-normal">MEM%</th>
               </tr>
             </thead>
-            <tbody className="text-zinc-300">
+            <tbody className="text-zinc-700 dark:text-zinc-300">
               {latest.processes.map((p) => (
                 <tr key={p.pid}>
                   <td>{p.pid}</td>

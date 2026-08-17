@@ -55,7 +55,7 @@ export default function SetupPage() {
       <PageHeader icon={<SetupIcon className="h-5 w-5" />} title="Environment Setup">
         <p>
           The actual steps this project used — not a generic example. See{" "}
-          <code className="text-zinc-300">documentation/environment-setup.md</code>{" "}
+          <code className="text-zinc-700 dark:text-zinc-300">documentation/environment-setup.md</code>{" "}
           for the full incident log (disk-full recovery, case-sensitivity fix,
           the perf/kernel-version mismatch) behind each of these.
         </p>
@@ -65,18 +65,18 @@ export default function SetupPage() {
         {steps.map((step, i) => (
           <div key={step.title} className="flex gap-4">
             <div className="flex flex-col items-center">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-emerald-800 bg-emerald-500/10 text-emerald-400">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-emerald-300 dark:border-emerald-800 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                 <step.icon className="h-5 w-5" />
               </div>
               {i < steps.length - 1 && (
-                <div className="my-1 w-px flex-1 bg-zinc-800" />
+                <div className="my-1 w-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
               )}
             </div>
             <div className="pb-8">
-              <p className="font-mono text-xs text-zinc-600">Step {i + 1}</p>
-              <h2 className="font-medium text-zinc-100">{step.title}</h2>
-              <p className="mt-1.5 text-sm text-zinc-400">{step.body}</p>
-              <pre className="mt-3 overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-950 p-3 font-mono text-xs text-zinc-300">
+              <p className="font-mono text-xs text-zinc-500 dark:text-zinc-600">Step {i + 1}</p>
+              <h2 className="font-medium text-zinc-900 dark:text-zinc-100">{step.title}</h2>
+              <p className="mt-1.5 text-sm text-zinc-600 dark:text-zinc-400">{step.body}</p>
+              <pre className="mt-3 overflow-x-auto rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-3 font-mono text-xs text-zinc-700 dark:text-zinc-300">
                 {step.command}
               </pre>
             </div>

@@ -41,7 +41,7 @@ export default function HeroArt() {
           cx={n.x}
           cy={n.y}
           r={i === 8 ? 6 : 4}
-          className="text-emerald-500"
+          className="text-emerald-600 dark:text-emerald-500"
           fill="currentColor"
           initial={{ opacity: 0.3 }}
           animate={{ opacity: [0.3, 1, 0.3] }}

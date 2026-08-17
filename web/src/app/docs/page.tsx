@@ -43,14 +43,14 @@ export default function DocsPage() {
         {topics.map((t) => (
           <div
             key={t.name}
-            className="rounded-lg border border-zinc-800 bg-zinc-950 p-5"
+            className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-5"
           >
             <div className="flex items-center gap-2.5">
-              <t.icon className="h-5 w-5 shrink-0 text-emerald-400" />
-              <h2 className="font-medium text-emerald-400">{t.name}</h2>
+              <t.icon className="h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+              <h2 className="font-medium text-emerald-600 dark:text-emerald-400">{t.name}</h2>
             </div>
-            <p className="mt-2 text-sm text-zinc-400">{t.theory}</p>
-            <pre className="mt-3 overflow-x-auto rounded bg-black p-3 font-mono text-xs text-zinc-300">
+            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{t.theory}</p>
+            <pre className="mt-3 overflow-x-auto rounded bg-white dark:bg-black p-3 font-mono text-xs text-zinc-700 dark:text-zinc-300">
               $ {t.command}
             </pre>
             <p className="mt-2 text-xs text-zinc-500">Expected: {t.output}</p>

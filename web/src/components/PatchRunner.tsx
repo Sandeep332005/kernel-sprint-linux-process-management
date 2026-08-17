@@ -112,7 +112,7 @@ export default function PatchRunner() {
 
   return (
     <div className="w-full space-y-6">
-      <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-5">
+      <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-5">
         <div className="mb-2 flex items-center justify-between">
           <label className="font-mono text-xs uppercase tracking-wide text-zinc-500">
             Upload Patch (unified diff)
@@ -120,7 +120,7 @@ export default function PatchRunner() {
           <button
             onClick={loadExamplePatch}
             disabled={running}
-            className="text-xs text-emerald-400 hover:underline disabled:opacity-50"
+            className="text-xs text-emerald-600 dark:text-emerald-400 hover:underline disabled:opacity-50"
           >
             load example: scheduler-optimization.patch
           </button>
@@ -130,7 +130,7 @@ export default function PatchRunner() {
           onChange={(e) => setPatchText(e.target.value)}
           disabled={running}
           placeholder="paste a unified diff against kernel/sched/fair.c..."
-          className="h-40 w-full resize-y rounded-md border border-zinc-800 bg-black p-3 font-mono text-xs text-zinc-200 outline-none placeholder:text-zinc-600 disabled:opacity-50"
+          className="h-40 w-full resize-y rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black p-3 font-mono text-xs text-zinc-800 dark:text-zinc-200 outline-none placeholder:text-zinc-500 dark:placeholder:text-zinc-600 disabled:opacity-50"
         />
         <button
           onClick={run}
@@ -141,25 +141,25 @@ export default function PatchRunner() {
         </button>
       </div>
 
-      <div className="flex flex-wrap items-center justify-center gap-6 rounded-lg border border-zinc-800 bg-zinc-950 p-5">
+      <div className="flex flex-wrap items-center justify-center gap-6 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-5">
         {STAGES.map((s, i) => (
           <div key={s.key} className="flex items-center gap-6">
             <StageBadge label={s.label} status={stages[s.key]} />
-            {i < STAGES.length - 1 && <span className="text-zinc-700">→</span>}
+            {i < STAGES.length - 1 && <span className="text-zinc-400 dark:text-zinc-700">→</span>}
           </div>
         ))}
       </div>
 
       {error && (
-        <div className="rounded-lg border border-rose-900 bg-rose-950/30 p-4 text-sm text-rose-300">
+        <div className="rounded-lg border border-rose-300 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/30 p-4 text-sm text-rose-700 dark:text-rose-300">
           {error}
         </div>
       )}
 
       {output.length > 0 && (
-        <div className="rounded-lg border border-zinc-800 bg-black p-4">
+        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black p-4">
           <p className="mb-2 font-mono text-xs text-zinc-500">build/boot output (live)</p>
-          <pre className="max-h-48 overflow-y-auto whitespace-pre-wrap font-mono text-[11px] text-zinc-400">
+          <pre className="max-h-48 overflow-y-auto whitespace-pre-wrap font-mono text-[11px] text-zinc-600 dark:text-zinc-400">
             {output.join("")}
             <div ref={outEndRef} />
           </pre>
@@ -170,29 +170,29 @@ export default function PatchRunner() {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-lg border border-emerald-900 bg-emerald-950/20 p-5"
+          className="rounded-lg border border-emerald-300 dark:border-emerald-900 bg-emerald-950/20 p-5"
         >
-          <p className="mb-3 font-mono text-xs uppercase tracking-wide text-emerald-400">
+          <p className="mb-3 font-mono text-xs uppercase tracking-wide text-emerald-600 dark:text-emerald-400">
             Report
           </p>
           <div className="grid grid-cols-3 gap-4 font-mono text-xs">
             <div>
               <div className="text-zinc-500">process_creation p99</div>
-              <div className="text-zinc-200">{report.data.process_creation?.p99_us.toFixed(1)} µs</div>
+              <div className="text-zinc-800 dark:text-zinc-200">{report.data.process_creation?.p99_us.toFixed(1)} µs</div>
               <div className="text-zinc-500">
                 {report.comparison_vs_baseline.process_creation_mean_pct_change}% vs baseline
               </div>
             </div>
             <div>
               <div className="text-zinc-500">switches/sec</div>
-              <div className="text-zinc-200">{report.data.context_switch?.switches_per_sec.toFixed(0)}</div>
+              <div className="text-zinc-800 dark:text-zinc-200">{report.data.context_switch?.switches_per_sec.toFixed(0)}</div>
               <div className="text-zinc-500">
                 {report.comparison_vs_baseline.context_switch_pct_change}% vs baseline
               </div>
             </div>
             <div>
               <div className="text-zinc-500">scheduler_latency p99</div>
-              <div className="text-zinc-200">{report.data.scheduler_latency?.p99_us.toFixed(1)} µs</div>
+              <div className="text-zinc-800 dark:text-zinc-200">{report.data.scheduler_latency?.p99_us.toFixed(1)} µs</div>
               <div className="text-zinc-500">
                 {report.comparison_vs_baseline.scheduler_latency_p99_pct_change}% vs baseline
               </div>
