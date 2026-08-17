@@ -1,4 +1,5 @@
-import ArchitectureDiagram from "@/components/ArchitectureDiagram";
+import SystemTree from "@/components/SystemTree";
+import SystemBreakdown from "@/components/SystemBreakdown";
 import PageHeader from "@/components/PageHeader";
 import { OrchestrateIcon } from "@/components/Icons";
 
@@ -23,14 +24,21 @@ export default function OrchestratePage() {
       <PageHeader icon={<OrchestrateIcon className="h-5 w-5" />} title="System Architecture">
         <p>
           How a command typed in the browser actually reaches a real
-          sandboxed kernel — every layer below is real code, not a design
+          sandboxed kernel — every branch below is real code, not a design
           placeholder.
         </p>
       </PageHeader>
 
-      <div className="mt-10 rounded-lg border border-zinc-800 bg-zinc-950 p-8">
-        <ArchitectureDiagram />
+      <div className="mt-10 rounded-lg border border-zinc-800 bg-zinc-950 p-6">
+        <SystemTree />
       </div>
+
+      <section className="mt-12">
+        <h2 className="mb-4 font-mono text-sm uppercase tracking-wide text-zinc-500">
+          How each part works
+        </h2>
+        <SystemBreakdown />
+      </section>
 
       <section className="mt-12">
         <h2 className="mb-4 font-mono text-sm uppercase tracking-wide text-zinc-500">
