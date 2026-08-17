@@ -52,38 +52,40 @@ export default function Nav() {
 
   return (
     <nav className="sticky top-0 z-50 border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-black/80">
-      <div className="mx-auto flex max-w-6xl items-center gap-4 overflow-x-auto px-4 py-3 text-sm">
+      <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3 text-sm">
         <span className="shrink-0 font-mono font-semibold text-emerald-600 dark:text-emerald-400">
           kernel-sprint
         </span>
-        {groups.map((group) => (
-          <div key={group.label || "ungrouped"} className="flex shrink-0 items-center gap-1">
-            {group.label && (
-              <span className="mr-1 hidden font-mono text-[10px] uppercase tracking-wider text-zinc-500 sm:inline dark:text-zinc-600">
-                {group.label}
-              </span>
-            )}
-            {group.links.map((link) => {
-              const active = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`flex shrink-0 items-center gap-1.5 rounded px-2.5 py-1.5 transition-colors ${
-                    active
-                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                      : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-                  }`}
-                >
-                  {link.icon}
-                  {link.label}
-                </Link>
-              );
-            })}
-            <span className="mx-1 h-4 w-px bg-zinc-300 last:hidden dark:bg-zinc-800" />
-          </div>
-        ))}
-        <div className="ml-auto shrink-0 pl-2">
+        <div className="flex flex-1 items-center gap-4 overflow-x-auto">
+          {groups.map((group) => (
+            <div key={group.label || "ungrouped"} className="flex shrink-0 items-center gap-1">
+              {group.label && (
+                <span className="mr-1 hidden font-mono text-[10px] uppercase tracking-wider text-zinc-500 sm:inline dark:text-zinc-600">
+                  {group.label}
+                </span>
+              )}
+              {group.links.map((link) => {
+                const active = pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`flex shrink-0 items-center gap-1.5 rounded px-2.5 py-1.5 transition-colors ${
+                      active
+                        ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                        : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                    }`}
+                  >
+                    {link.icon}
+                    {link.label}
+                  </Link>
+                );
+              })}
+              <span className="mx-1 h-4 w-px bg-zinc-300 last:hidden dark:bg-zinc-800" />
+            </div>
+          ))}
+        </div>
+        <div className="shrink-0">
           <ThemeToggle />
         </div>
       </div>
