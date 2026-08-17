@@ -56,34 +56,43 @@ export default function Nav() {
         <span className="shrink-0 font-mono font-semibold text-emerald-600 dark:text-emerald-400">
           kernel-sprint
         </span>
-        <div className="flex flex-1 items-center gap-4 overflow-x-auto">
-          {groups.map((group) => (
-            <div key={group.label || "ungrouped"} className="flex shrink-0 items-center gap-1">
-              {group.label && (
-                <span className="mr-1 hidden font-mono text-[10px] uppercase tracking-wider text-zinc-500 sm:inline dark:text-zinc-600">
-                  {group.label}
-                </span>
-              )}
-              {group.links.map((link) => {
-                const active = pathname === link.href;
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={`flex shrink-0 items-center gap-1.5 rounded px-2.5 py-1.5 transition-colors ${
-                      active
-                        ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                        : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-                    }`}
-                  >
-                    {link.icon}
-                    {link.label}
-                  </Link>
-                );
-              })}
-              <span className="mx-1 h-4 w-px bg-zinc-300 last:hidden dark:bg-zinc-800" />
-            </div>
-          ))}
+        <div className="relative min-w-0 flex-1">
+          <div className="flex items-center gap-4 overflow-x-auto">
+            {groups.map((group) => (
+              <div key={group.label || "ungrouped"} className="flex shrink-0 items-center gap-1">
+                {group.label && (
+                  <span className="mr-1 hidden font-mono text-[10px] uppercase tracking-wider text-zinc-500 sm:inline dark:text-zinc-600">
+                    {group.label}
+                  </span>
+                )}
+                {group.links.map((link) => {
+                  const active = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={`flex shrink-0 items-center gap-1.5 rounded px-2.5 py-1.5 transition-colors ${
+                        active
+                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                          : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                      }`}
+                    >
+                      {link.icon}
+                      {link.label}
+                    </Link>
+                  );
+                })}
+                <span className="mx-1 h-4 w-px bg-zinc-300 last:hidden dark:bg-zinc-800" />
+              </div>
+            ))}
+          </div>
+          {/* Fade hint at the scrollable edge -- without it, a link clipped
+              mid-word by overflow-x-auto (e.g. "Experiments" -> "E") reads
+              as a rendering bug rather than "scroll for more". */}
+          <div
+            className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-white to-transparent dark:from-black"
+            aria-hidden="true"
+          />
         </div>
         <div className="shrink-0">
           <ThemeToggle />
