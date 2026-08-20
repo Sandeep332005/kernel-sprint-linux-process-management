@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { simulateMonitorMetrics, type SimMetrics } from "@/lib/simulate";
 
 const BACKEND_WS = "ws://localhost:8877/ws/monitor";
 const HISTORY_LEN = 30;
@@ -53,28 +54,65 @@ function Gauge({ label, pct }: { label: string; pct: number | null }) {
 
 export default function LiveMonitor() {
   const [connected, setConnected] = useState(false);
+  const [demoMode, setDemoMode] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [switchesHistory, setSwitchesHistory] = useState<number[]>([]);
   const [wakeupsHistory, setWakeupsHistory] = useState<number[]>([]);
   const [latest, setLatest] = useState<Metrics | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // Try real WebSocket first, fall back to simulation
   useEffect(() => {
     const ws = new WebSocket(BACKEND_WS);
     wsRef.current = ws;
 
-    ws.onopen = () => setConnected(true);
+    ws.onopen = () => {
+      setConnected(true);
+      setDemoMode(false);
+    };
     ws.onmessage = (event) => {
       const metrics: Metrics = JSON.parse(event.data);
       setLatest(metrics);
       setSwitchesHistory((h) => [...h.slice(-(HISTORY_LEN - 1)), metrics.context_switches_per_sec]);
       setWakeupsHistory((h) => [...h.slice(-(HISTORY_LEN - 1)), metrics.wakeups_per_sec]);
     };
-    ws.onerror = () => setError("could not reach backend at " + BACKEND_WS);
-    ws.onclose = () => setConnected(false);
+    ws.onerror = () => {
+      // Fall back to demo mode
+      setDemoMode(true);
+      setConnected(true); // "connected" in demo mode
+      ws.close();
+    };
+    ws.onclose = () => {
+      if (!demoMode) setConnected(false);
+    };
 
     return () => ws.close();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Demo mode: generate simulated metrics every 1.5s
+  useEffect(() => {
+    if (!demoMode) return;
+
+    // Seed initial history
+    const initial: SimMetrics[] = [];
+    for (let i = 0; i < HISTORY_LEN; i++) initial.push(simulateMonitorMetrics());
+    setSwitchesHistory(initial.map((m) => m.context_switches_per_sec));
+    setWakeupsHistory(initial.map((m) => m.wakeups_per_sec));
+    setLatest(initial[initial.length - 1]);
+
+    intervalRef.current = setInterval(() => {
+      const m = simulateMonitorMetrics();
+      setLatest(m);
+      setSwitchesHistory((h) => [...h.slice(-(HISTORY_LEN - 1)), m.context_switches_per_sec]);
+      setWakeupsHistory((h) => [...h.slice(-(HISTORY_LEN - 1)), m.wakeups_per_sec]);
+    }, 1500);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [demoMode]);
 
   if (error) {
     return (
@@ -88,9 +126,14 @@ export default function LiveMonitor() {
     <div className="space-y-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-5">
       <div className="flex items-center justify-between">
         <p className="font-mono text-xs uppercase tracking-wide text-zinc-500">
-          Live eBPF monitoring (real sched_switch / sched_wakeup tracepoints via bpftrace)
+          {demoMode ? "Demo eBPF monitoring (simulated sched_switch / sched_wakeup data)" : "Live eBPF monitoring (real sched_switch / sched_wakeup tracepoints via bpftrace)"}
         </p>
-        <span className={`h-2 w-2 rounded-full ${connected ? "bg-emerald-400" : "bg-zinc-600"}`} />
+        <div className="flex items-center gap-2">
+          {demoMode && (
+            <span className="rounded bg-amber-100 dark:bg-amber-900/30 px-1.5 py-0.5 text-[10px] font-mono text-amber-600 dark:text-amber-400">DEMO</span>
+          )}
+          <span className={`h-2 w-2 rounded-full ${connected ? "bg-emerald-400" : "bg-zinc-600"}`} />
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">

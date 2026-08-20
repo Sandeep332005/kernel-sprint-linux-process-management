@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useRef, useState } from "react";
+import { simulateChaos } from "@/lib/simulate";
 
 const BACKEND_WS = "ws://localhost:8877/ws/chaos";
 
@@ -32,6 +33,7 @@ export default function ChaosPanel() {
   const [samples, setSamples] = useState<Record<string, unknown>[]>([]);
   const [results, setResults] = useState<Record<string, ChaosResult>>({});
   const [error, setError] = useState<string | null>(null);
+  const [demoMode, setDemoMode] = useState<boolean | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
 
   function run(action: ActionConfig) {
@@ -40,33 +42,71 @@ export default function ChaosPanel() {
     setSamples([]);
     setError(null);
 
-    const ws = new WebSocket(BACKEND_WS);
-    wsRef.current = ws;
-
-    ws.onopen = () => ws.send(JSON.stringify({ action: action.key, ...action.params }));
-
-    ws.onmessage = (event) => {
-      const msg = JSON.parse(event.data);
-      if (msg.type === "sample") {
-        setSamples((s) => [...s.slice(-19), msg]);
-      } else if (msg.type === "result") {
-        setResults((r) => ({ ...r, [action.key]: msg }));
-        setRunning(null);
+    // Try WebSocket first; fall back to simulation
+    try {
+      const ws = new WebSocket(BACKEND_WS);
+      wsRef.current = ws;
+      const timeout = setTimeout(() => {
         ws.close();
-      } else if (msg.type === "error") {
-        setError(msg.message);
+        runSimulated(action);
+      }, 2000);
+
+      ws.onopen = () => {
+        clearTimeout(timeout);
+        setDemoMode(false);
+        ws.send(JSON.stringify({ action: action.key, ...action.params }));
+      };
+
+      ws.onmessage = (event) => {
+        clearTimeout(timeout);
+        const msg = JSON.parse(event.data);
+        if (msg.type === "sample") {
+          setSamples((s) => [...s.slice(-19), msg]);
+        } else if (msg.type === "result") {
+          setResults((r) => ({ ...r, [action.key]: msg }));
+          setRunning(null);
+          ws.close();
+        } else if (msg.type === "error") {
+          setError(msg.message);
+          setRunning(null);
+          ws.close();
+        }
+      };
+      ws.onerror = () => {
+        clearTimeout(timeout);
+        runSimulated(action);
+      };
+    } catch {
+      runSimulated(action);
+    }
+  }
+
+  function runSimulated(action: ActionConfig) {
+    setDemoMode(true);
+    const sim = simulateChaos(action.key);
+
+    // Animate samples appearing one by one
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < sim.samples.length) {
+        setSamples((s) => [...s.slice(-19), sim.samples[i] as unknown as Record<string, unknown>]);
+        i++;
+      } else {
+        clearInterval(interval);
+        setResults((r) => ({ ...r, [action.key]: sim.result as unknown as ChaosResult }));
         setRunning(null);
-        ws.close();
       }
-    };
-    ws.onerror = () => {
-      setError("could not reach backend at " + BACKEND_WS);
-      setRunning(null);
-    };
+    }, 400);
   }
 
   return (
     <div className="space-y-4">
+      {demoMode && (
+        <div className="rounded-lg border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 px-4 py-2 text-xs text-amber-700 dark:text-amber-300">
+          ⚡ Demo mode — chaos results are simulated. Run <code>cd backend &amp;&amp; python main.py</code> for real injection.
+        </div>
+      )}
+
       {error && (
         <div className="rounded-lg border border-rose-300 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/30 p-4 text-sm text-rose-700 dark:text-rose-300">
           {error}

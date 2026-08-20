@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useRef, useState } from "react";
+import { simulatePatchReport, SIMULATED_EXAMPLE_PATCH } from "@/lib/simulate";
 
 const BACKEND_HTTP = "http://localhost:8877";
 const BACKEND_WS = "ws://localhost:8877/ws/patch";
@@ -56,6 +57,24 @@ function StageBadge({ label, status }: { label: string; status: StageStatus }) {
   );
 }
 
+const SIMULATED_OUTPUT_LINES = [
+  "Applying patch to kernel/sched/fair.c...",
+  "patch: applying hunk at line 123",
+  "Patch applied successfully. 1 file changed.",
+  "",
+  "Building kernel...",
+  "  CC      kernel/sched/fair.o",
+  "  LD      vmlinux.o",
+  "  OBJCOPY arch/x86/boot/bzImage",
+  "Kernel built successfully: arch/x86/boot/bzImage",
+  "",
+  "Booting optimized kernel under QEMU...",
+  "Run benchmarks: process_creation, context_switch, scheduler_latency",
+  "Collecting results...",
+  "Generating comparison report...",
+  "Done.",
+];
+
 export default function PatchRunner() {
   const [patchText, setPatchText] = useState("");
   const [stages, setStages] = useState<StageState>(initialStages);
@@ -63,14 +82,19 @@ export default function PatchRunner() {
   const [output, setOutput] = useState<string[]>([]);
   const [report, setReport] = useState<Report | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [demoMode, setDemoMode] = useState<boolean | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const outEndRef = useRef<HTMLDivElement>(null);
 
   function loadExamplePatch() {
+    // Try real backend first
     fetch(`${BACKEND_HTTP}/api/example-patch`)
       .then((r) => r.text())
       .then(setPatchText)
-      .catch(() => setError("could not load example patch"));
+      .catch(() => {
+        setPatchText(SIMULATED_EXAMPLE_PATCH);
+        setDemoMode(true);
+      });
   }
 
   function run() {
@@ -81,37 +105,93 @@ export default function PatchRunner() {
     setReport(null);
     setError(null);
 
-    const ws = new WebSocket(BACKEND_WS);
-    wsRef.current = ws;
-
-    ws.onopen = () => ws.send(patchText);
-
-    ws.onmessage = (event) => {
-      const msg = JSON.parse(event.data);
-      if (msg.type === "stage") {
-        setStages((s) => ({ ...s, [msg.stage]: msg.status === "start" ? "running" : "done" }));
-      } else if (msg.type === "output") {
-        setOutput((o) => [...o.slice(-200), msg.line]);
-        outEndRef.current?.scrollIntoView({ behavior: "smooth" });
-      } else if (msg.type === "result") {
-        setReport(msg);
-        setRunning(false);
+    // Try WebSocket first
+    try {
+      const ws = new WebSocket(BACKEND_WS);
+      wsRef.current = ws;
+      const timeout = setTimeout(() => {
         ws.close();
-      } else if (msg.type === "error") {
-        setError(msg.message);
-        if (msg.stage) setStages((s) => ({ ...s, [msg.stage]: "error" }));
-        setRunning(false);
-        ws.close();
+        runSimulated();
+      }, 2000);
+
+      ws.onopen = () => {
+        clearTimeout(timeout);
+        setDemoMode(false);
+        ws.send(patchText);
+      };
+
+      ws.onmessage = (event) => {
+        clearTimeout(timeout);
+        const msg = JSON.parse(event.data);
+        if (msg.type === "stage") {
+          setStages((s) => ({ ...s, [msg.stage]: msg.status === "start" ? "running" : "done" }));
+        } else if (msg.type === "output") {
+          setOutput((o) => [...o.slice(-200), msg.line]);
+          outEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        } else if (msg.type === "result") {
+          setReport(msg);
+          setRunning(false);
+          ws.close();
+        } else if (msg.type === "error") {
+          setError(msg.message);
+          if (msg.stage) setStages((s) => ({ ...s, [msg.stage]: "error" }));
+          setRunning(false);
+          ws.close();
+        }
+      };
+      ws.onerror = () => {
+        clearTimeout(timeout);
+        runSimulated();
+      };
+    } catch {
+      runSimulated();
+    }
+  }
+
+  function runSimulated() {
+    setDemoMode(true);
+    const stageKeys: (keyof StageState)[] = ["apply", "build", "boot", "compare", "report"];
+    let stageIdx = 0;
+    let lineIdx = 0;
+
+    const interval = setInterval(() => {
+      // Advance stage every few lines
+      if (stageIdx < stageKeys.length && lineIdx >= 0 && lineIdx % 4 === 0) {
+        const currentStage = stageKeys[stageIdx];
+        setStages((s) => ({ ...s, [currentStage]: "running" }));
+        if (lineIdx > 0) {
+          const prevStage = stageKeys[stageIdx - 1];
+          setStages((s) => ({ ...s, [prevStage]: "done" }));
+        }
+        stageIdx++;
       }
-    };
-    ws.onerror = () => {
-      setError("could not reach backend at " + BACKEND_WS);
-      setRunning(false);
-    };
+
+      if (lineIdx < SIMULATED_OUTPUT_LINES.length) {
+        setOutput((o) => [...o, SIMULATED_OUTPUT_LINES[lineIdx]]);
+        outEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        lineIdx++;
+      } else {
+        clearInterval(interval);
+        // Mark last stage done
+        setStages((s) => {
+          const next = { ...s };
+          stageKeys.forEach((k) => (next[k] = "done"));
+          return next;
+        });
+        setReport(simulatePatchReport());
+        setRunning(false);
+      }
+    }, 350);
   }
 
   return (
     <div className="w-full space-y-6">
+      {demoMode && (
+        <div className="rounded-lg border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 px-4 py-2 text-xs text-amber-700 dark:text-amber-300">
+          ⚡ Demo mode — patch pipeline is simulated. Run <code>cd backend &amp;&amp; python main.py</code> for real execution.
+        </div>
+      )}
+
       <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-5">
         <div className="mb-2 flex items-center justify-between">
           <label className="font-mono text-xs uppercase tracking-wide text-zinc-500">

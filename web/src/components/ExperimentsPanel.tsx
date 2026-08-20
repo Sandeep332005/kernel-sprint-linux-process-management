@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { simulateExperimentResult } from "@/lib/simulate";
 
 const BACKEND_WS = "ws://localhost:8877/ws/experiments";
 
@@ -37,34 +38,66 @@ export default function ExperimentsPanel() {
   const [running, setRunning] = useState<string | null>(null);
   const [results, setResults] = useState<Record<string, Record<string, unknown>>>({});
   const [error, setError] = useState<string | null>(null);
+  const [demoMode, setDemoMode] = useState<boolean | null>(null);
 
   function run(test: TestConfig) {
     if (running) return;
     setRunning(test.key);
     setError(null);
 
-    const ws = new WebSocket(BACKEND_WS);
-    ws.onopen = () => ws.send(JSON.stringify({ test: test.key, [test.paramKey]: values[test.key] }));
-    ws.onmessage = (event) => {
-      const msg = JSON.parse(event.data);
-      if (msg.type === "result") {
-        setResults((r) => ({ ...r, [test.key]: msg }));
-        setRunning(null);
+    // Try WebSocket first; fall back to simulation
+    try {
+      const ws = new WebSocket(BACKEND_WS);
+      const timeout = setTimeout(() => {
+        // If WebSocket doesn't open in 2s, assume no backend
         ws.close();
-      } else if (msg.type === "error") {
-        setError(msg.message);
-        setRunning(null);
-        ws.close();
-      }
-    };
-    ws.onerror = () => {
-      setError("could not reach backend at " + BACKEND_WS);
+        runSimulated(test);
+      }, 2000);
+
+      ws.onopen = () => {
+        clearTimeout(timeout);
+        setDemoMode(false);
+        ws.send(JSON.stringify({ test: test.key, [test.paramKey]: values[test.key] }));
+      };
+      ws.onmessage = (event) => {
+        clearTimeout(timeout);
+        const msg = JSON.parse(event.data);
+        if (msg.type === "result") {
+          setResults((r) => ({ ...r, [test.key]: msg }));
+          setRunning(null);
+          ws.close();
+        } else if (msg.type === "error") {
+          setError(msg.message);
+          setRunning(null);
+          ws.close();
+        }
+      };
+      ws.onerror = () => {
+        clearTimeout(timeout);
+        runSimulated(test);
+      };
+    } catch {
+      runSimulated(test);
+    }
+  }
+
+  function runSimulated(test: TestConfig) {
+    setDemoMode(true);
+    // Simulate a short delay then return fake results
+    setTimeout(() => {
+      setResults((r) => ({ ...r, [test.key]: simulateExperimentResult(test.key) }));
       setRunning(null);
-    };
+    }, 800 + Math.random() * 700);
   }
 
   return (
     <div className="space-y-4">
+      {demoMode && (
+        <div className="rounded-lg border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 px-4 py-2 text-xs text-amber-700 dark:text-amber-300">
+          ⚡ Demo mode — results are simulated. Run <code>cd backend &amp;&amp; python main.py</code> for real experiments.
+        </div>
+      )}
+
       {error && (
         <div className="rounded-lg border border-rose-300 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/30 p-4 text-sm text-rose-700 dark:text-rose-300">
           {error}

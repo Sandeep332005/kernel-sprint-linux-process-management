@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { SIM_ENV, simulateCommand } from "@/lib/simulate";
 
 const BACKEND_HTTP = "http://localhost:8877";
 const BACKEND_WS = "ws://localhost:8877/ws/lab";
@@ -18,18 +19,25 @@ export default function RealTerminal() {
   const [history, setHistory] = useState<{ cmd: string; out: string }[]>([]);
   const [input, setInput] = useState("");
   const [running, setRunning] = useState(false);
+  const [demoMode, setDemoMode] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
   const currentOutRef = useRef<string>("");
   const endRef = useRef<HTMLDivElement>(null);
+  const demoTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     fetch(`${BACKEND_HTTP}/api/environment`)
       .then((r) => r.json())
       .then(setEnv)
-      .catch(() => setEnv({ status: "disconnected" }));
+      .catch(() => {
+        setEnv(SIM_ENV);
+        setDemoMode(true);
+      });
   }, []);
 
   useEffect(() => {
+    if (demoMode) return; // Don't open WS in demo mode
+
     const ws = new WebSocket(BACKEND_WS);
     wsRef.current = ws;
 
@@ -44,10 +52,13 @@ export default function RealTerminal() {
         setRunning(false);
       }
     };
-    ws.onerror = () => setEnv((e) => ({ ...e, status: "disconnected" }));
+    ws.onerror = () => {
+      setEnv(SIM_ENV);
+      setDemoMode(true);
+    };
 
     return () => ws.close();
-  }, []);
+  }, [demoMode]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -55,7 +66,36 @@ export default function RealTerminal() {
 
   function run() {
     const cmd = input.trim();
-    if (!cmd || running || !wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
+    if (!cmd || running) return;
+
+    if (demoMode) {
+      // Simulated execution
+      currentOutRef.current = "";
+      setHistory((h) => [...h, { cmd, out: "" }]);
+      setRunning(true);
+      setInput("");
+
+      // Simulate typing delay
+      let i = 0;
+      const output = simulateCommand(cmd);
+      const interval = setInterval(() => {
+        i += Math.ceil(output.length / 8);
+        const chunk = output.slice(0, i);
+        currentOutRef.current = chunk;
+        setHistory((h) => {
+          const next = [...h];
+          next[next.length - 1] = { cmd, out: chunk };
+          return next;
+        });
+        if (i >= output.length) {
+          clearInterval(interval);
+          setRunning(false);
+        }
+      }, 60);
+      return;
+    }
+
+    if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
     currentOutRef.current = "";
     setHistory((h) => [...h, { cmd, out: "" }]);
     setRunning(true);
@@ -63,8 +103,19 @@ export default function RealTerminal() {
     setInput("");
   }
 
+  useEffect(() => {
+    return () => {        if (demoTimerRef.current !== undefined) clearTimeout(demoTimerRef.current);
+    };
+  }, []);
+
   return (
     <div className="w-full space-y-4">
+      {demoMode && (
+        <div className="rounded-lg border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 px-4 py-2 text-xs text-amber-700 dark:text-amber-300">
+          ⚡ Demo mode — responses are simulated. Run <code>cd backend && python main.py</code> for real execution.
+        </div>
+      )}
+
       <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-4 text-sm">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <div>
@@ -94,7 +145,7 @@ export default function RealTerminal() {
 
       <div className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black font-mono text-sm">
         <div className="border-b border-zinc-200 dark:border-zinc-800 px-4 py-2 text-xs text-zinc-500">
-          real sandboxed execution — allowed: perf · trace-cmd · stress-ng · ps · top · uname
+          {demoMode ? "simulated execution — try: ps aux · uname -a · stress-ng --cpu 2 --timeout 5s" : "real sandboxed execution — allowed: perf · trace-cmd · stress-ng · ps · top · uname"}
         </div>
         <div className="max-h-96 overflow-y-auto p-4">
           {history.map((h, i) => (
