@@ -2,7 +2,8 @@
 import os
 from pathlib import Path
 
-DOCKER_SOCK = f"unix://{Path.home()}/.colima/kernel-sprint/docker.sock"
+PROFILE = "kernel-sprint"
+DOCKER_SOCK = f"unix://{Path.home()}/.colima/{PROFILE}/docker.sock"
 
 
 def docker_env():

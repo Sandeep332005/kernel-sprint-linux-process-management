@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import PageHeader from "@/components/PageHeader";
 import { ResultsIcon } from "@/components/Icons";
+import { simulateResults } from "@/lib/simulate";
 
 const BACKEND_HTTP = "http://localhost:8877";
 
@@ -56,7 +57,10 @@ export default function ResultsPage() {
     fetch(`${BACKEND_HTTP}/api/results`)
       .then((r) => r.json())
       .then(setResults)
-      .catch(() => setError(true));
+      .catch(() => {
+        // Fall back to real measured data when backend is unreachable (e.g. GitHub Pages)
+        setResults(simulateResults());
+      });
   }, []);
 
   return (

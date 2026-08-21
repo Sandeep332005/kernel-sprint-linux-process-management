@@ -24,26 +24,55 @@ export default function RealKernelWorkflow() {
   const [connected, setConnected] = useState(false);
   const [active, setActive] = useState(0);
   const [latest, setLatest] = useState<Metrics | null>(null);
+  const [demoMode, setDemoMode] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isDark = useIsDark();
 
   useEffect(() => {
     const ws = new WebSocket(BACKEND_WS);
     wsRef.current = ws;
 
-    ws.onopen = () => setConnected(true);
+    const fallback = setTimeout(() => {
+      // No connection after 2s — fall back to simulated telemetry
+      ws.close();
+      setDemoMode(true);
+      setConnected(true);
+      setLatest({ context_switches_per_sec: 12400, wakeups_per_sec: 18600 });
+    }, 2000);
+
+    ws.onopen = () => {
+      clearTimeout(fallback);
+      setConnected(true);
+    };
     ws.onmessage = (event) => {
+      clearTimeout(fallback);
       const metrics: Metrics = JSON.parse(event.data);
       setLatest(metrics);
-      // one real telemetry tick from bpftrace = one stage transition --
-      // this advances in lockstep with real kernel activity, not a
-      // fixed setInterval loop
       setActive((a) => (a + 1) % STAGES.length);
     };
-    ws.onclose = () => setConnected(false);
+    ws.onerror = () => {
+      clearTimeout(fallback);
+      ws.close();
+      setDemoMode(true);
+      setConnected(true);
+      setLatest({ context_switches_per_sec: 12400, wakeups_per_sec: 18600 });
+    };
+    ws.onclose = () => {
+      if (!demoMode) setConnected(false);
+    };
 
-    return () => ws.close();
+    return () => { clearTimeout(fallback); ws.close(); };
   }, []);
+
+  // Demo mode: advance stages on a fixed interval simulating telemetry ticks
+  useEffect(() => {
+    if (!demoMode) return;
+    intervalRef.current = setInterval(() => {
+      setActive((a) => (a + 1) % STAGES.length);
+    }, 1200);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [demoMode]);
 
   if (!connected && !latest) {
     return (

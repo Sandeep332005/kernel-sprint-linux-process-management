@@ -316,6 +316,64 @@ export function simulatePatchReport(): {
   };
 }
 
+/* ---- Simulated benchmark results (real data from results.json) ---- */
+
+export function simulateResults() {
+  return {
+    runs: 3,
+    environment:
+      "qemu-system-aarch64 -M virt -smp 4 -m 1024 (TCG software emulation, no nested KVM/HVF)",
+    baseline: {
+      kernel: "linux-6.6.151 (unpatched)",
+      sysctl_sched_base_slice_ns: 700000,
+      process_creation: {
+        mean_us: 2838.25,
+        min_us: 2492.94,
+        max_us: 7018.06,
+        p50_us: 2823.91,
+        p99_us: 3402.62,
+      },
+      context_switch: {
+        round_trip_us: 357.87,
+        per_switch_us: 178.93,
+        switches_per_sec: 5588.67,
+      },
+      scheduler_latency: {
+        mean_us: 434.91,
+        min_us: 134.6,
+        max_us: 6441.93,
+        p50_us: 153.22,
+        p99_us: 4372.66,
+      },
+    },
+    optimized: {
+      kernel: "linux-6.6.151-00001-g5096b57cd167 (patched)",
+      sysctl_sched_base_slice_ns: 300000,
+      process_creation: {
+        mean_us: 2892.34,
+        min_us: 2522.12,
+        max_us: 8651.78,
+        p50_us: 2866.52,
+        p99_us: 3690.92,
+      },
+      context_switch: {
+        round_trip_us: 366.48,
+        per_switch_us: 183.24,
+        switches_per_sec: 5464.0,
+      },
+      scheduler_latency: {
+        mean_us: 431.82,
+        min_us: 143.05,
+        max_us: 6274.93,
+        p50_us: 153.39,
+        p99_us: 3183.07,
+      },
+    },
+    note:
+      "Demo mode — showing real measured data from 3 boot-tested runs. Connect to the backend for live execution.",
+  };
+}
+
 /* ---- Simulated example patch ---- */
 
 export const SIMULATED_EXAMPLE_PATCH = `--- a/kernel/sched/fair.c

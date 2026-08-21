@@ -86,11 +86,14 @@ export default function ChaosPanel() {
     const sim = simulateChaos(action.key);
 
     // Animate samples appearing one by one
-    let i = 0;
+    let idx = 0;
     const interval = setInterval(() => {
-      if (i < sim.samples.length) {
-        setSamples((s) => [...s.slice(-19), sim.samples[i] as unknown as Record<string, unknown>]);
-        i++;
+      if (idx < sim.samples.length) {
+        const sample = sim.samples[idx];
+        if (sample) {
+          setSamples((s) => [...s.slice(-19), sample as unknown as Record<string, unknown>]);
+        }
+        idx++;
       } else {
         clearInterval(interval);
         setResults((r) => ({ ...r, [action.key]: sim.result as unknown as ChaosResult }));
@@ -135,7 +138,7 @@ export default function ChaosPanel() {
 
               {isRunning && samples.length > 0 && (
                 <div className="mb-2 flex flex-wrap gap-1">
-                  {samples.map((s, i) => (
+                  {samples.filter(Boolean).map((s, i) => (
                     <motion.span
                       key={i}
                       initial={{ opacity: 0 }}

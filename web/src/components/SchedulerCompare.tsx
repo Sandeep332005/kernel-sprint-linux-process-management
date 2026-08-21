@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { simulateResults } from "@/lib/simulate";
 
 const BACKEND_HTTP = "http://localhost:8877";
 
@@ -96,7 +97,10 @@ export default function SchedulerCompare() {
     fetch(`${BACKEND_HTTP}/api/results`)
       .then((r) => r.json())
       .then(setResults)
-      .catch(() => setError(true));
+      .catch(() => {
+        // Fall back to real measured data when backend is unreachable (e.g. GitHub Pages)
+        setResults(simulateResults());
+      });
   }, []);
 
   if (error) {

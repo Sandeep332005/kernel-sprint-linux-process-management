@@ -14,3 +14,9 @@ web/out/
 
 # Scratch dir for in-flight patch pipeline uploads (backend/agents/patch_agent.py)
 .patch-scratch/
+
+# Playwright CLI artifacts
+.playwright-cli/
+
+# Screenshot artifacts
+lab-page.png
